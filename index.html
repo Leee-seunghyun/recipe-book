@@ -44,6 +44,8 @@ a{color:inherit}
 .eyebrow{font-size:12px;color:var(--sub)}
 .topbar{display:flex;justify-content:space-between;align-items:center;min-height:44px}
 .icons{display:flex;gap:0}
+.logo{display:flex;align-items:center;margin-left:-6px;color:var(--ink)}
+.logo svg{display:block}
 .iconbtn{width:44px;height:44px;border:0;background:transparent;display:flex;align-items:center;justify-content:center;padding:0;color:var(--ink)}
 .iconbtn.dim{color:#9A9A9A}
 .hl{margin:10px 0 0;font-size:58px;font-weight:500;line-height:.93;letter-spacing:-2.2px;text-transform:lowercase;word-break:keep-all;overflow-wrap:anywhere}
@@ -686,9 +688,10 @@ function allTags() {
 function chipsHTML() {
   return ['All'].concat(allTags()).map((t) => '<button class="tab' + (S.tag === t ? ' on' : '') + '" data-act="tag" data-tag="' + esc(t) + '">' + esc(t) + '</button>').join('');
 }
+const LOGO = '<div class="logo" role="img" aria-label="löffel"><svg width="36" height="36" viewBox="0 0 48 48" aria-hidden="true"><circle cx="17" cy="15" r="3.4" fill="currentColor"/><circle cx="31" cy="15" r="3.4" fill="currentColor"/><path transform="translate(-1.2 0)" d="M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z" fill="currentColor"/></svg></div>';
 function homeHTML() {
   return '<div class="page">' +
-    '<div class="topbar"><div></div><div class="icons">' +
+    '<div class="topbar">' + LOGO + '<div class="icons">' +
       '<button class="iconbtn" data-act="settings" aria-label="Settings">' + I.sliders + '</button>' +
       '<button class="iconbtn" data-act="new" aria-label="Add recipe">' + I.plus + '</button>' +
     '</div></div>' +
@@ -922,7 +925,7 @@ function shopHTML() {
     return '<div class="check' + (i.done ? ' done' : '') + '" data-idx="' + idx + '"><label><input type="checkbox" data-chk="' + idx + '"' + (i.done ? ' checked' : '') + '>' + name + (typeof i.price === 'number' ? '<span class="pr"><span class="lbl">' + money(i.price) + '</span></span>' : '') + '</label></div>';
   };
   return '<div class="page"' + (E ? ' style="padding-bottom:150px"' : '') + '>' + 
-    '<div class="topbar"><div></div><div class="icons">' + (!items.length ? '' : E ? '<button class="txtbtn" data-act="edit-done" style="font-weight:500">Done</button>' : '<button class="iconbtn" data-act="edit-shop" aria-label="Edit list">' + I.pen + '</button>') + '</div></div>' +
+    '<div class="topbar">' + LOGO + '<div class="icons">' + (!items.length ? '' : E ? '<button class="txtbtn" data-act="edit-done" style="font-weight:500">Done</button>' : '<button class="iconbtn" data-act="edit-shop" aria-label="Edit list">' + I.pen + '</button>') + '</div></div>' +
     '<h1 class="hl">shopping<br><span class="w">list<span class="ic" style="--o:-7.8px">' + I.basket(49, 4.7) + '</span></span></h1>' +
     (E ? '<p class="hint" style="margin-top:12px">Drag <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square" role="img" aria-label="handle" style="vertical-align:-3px;margin:0 1px"><path d="M5 9h14M5 15h14"/></svg> to move an item. Tap items to select and move several at once.</p>'
        : '<div class="eyebrow" style="margin-top:12px"><span id="shopest">' + (est ? 'Est. ' + money(est) : '') + '</span></div>') + statusHTML() + chips +
