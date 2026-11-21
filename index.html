@@ -291,34 +291,17 @@ select.inp{appearance:none;-webkit-appearance:none}
 .cook .cta{background:var(--field);color:var(--ink)}
 .cook .cta.alt{background:rgba(242,238,231,.12);color:var(--field)}
 .cook .cta:disabled{opacity:.35}
-.cook.done .cd-body{align-items:center;justify-content:center;text-align:center;gap:30px;overflow:visible}
+.cook.done .cd-body{align-items:center;justify-content:center;text-align:center;gap:34px}
 .cd-mark{position:relative;width:112px;height:112px;display:flex;align-items:center;justify-content:center}
-.cd-sym{display:block;color:var(--field);overflow:visible;transform-origin:50% 75%;animation:cdHop .8s .38s var(--spring) both}
+.cd-sym{display:block;color:var(--field);overflow:visible}
 .cd-eye{transform-box:fill-box;transform-origin:center}
-.cd-eye.r{animation:cdShut .14s .66s ease-in forwards}
-.cd-wink{transform-box:fill-box;transform-origin:center;opacity:0;animation:cdWink .34s .76s var(--pop) forwards}
-.cd-txt{display:flex;flex-direction:column;align-items:center;gap:8px}
-.cd-k{animation:fade .5s .2s ease backwards}
-.cd-h .w{display:block;overflow:hidden;padding:0 .06em .14em;margin-bottom:-.14em}
-.cd-h .w>span{display:inline-block;animation:cdRise .9s var(--spring) backwards}
-.cd-line{display:block;margin-top:6px;color:var(--field);overflow:visible}
-.cd-l0{opacity:0;animation:fade .2s 1.18s forwards}
-.cd-l1{stroke-dasharray:1;stroke-dashoffset:1;animation:cdDraw .8s 1.2s cubic-bezier(.6,0,.3,1) forwards}
-.cd-l2{transform-box:fill-box;transform-origin:85% 40%;opacity:0;animation:cdBowl .45s 1.9s var(--pop) forwards}
-.cd-meta{display:flex;gap:6px;margin-top:10px;animation:fadeUp .5s 1.75s var(--spring) backwards}
-.cd-meta span{height:28px;padding:0 11px;border-radius:14px;background:rgba(242,238,231,.1);color:rgba(242,238,231,.75);font-size:12px;display:inline-flex;align-items:center;gap:5px}
-.cd-fx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:2}
-.cd-fx i{position:absolute;display:block;background:var(--field);border-radius:99px;will-change:transform,opacity}
-.cd-fx i.pill{width:13px;height:5px}
-.cd-fx i.dim{background:rgba(242,238,231,.45)}
+.cd-eye.r{animation:cdShut .16s .7s ease-in forwards}
+.cd-wink{transform-box:fill-box;transform-origin:center;opacity:0;animation:cdWink .32s .82s var(--pop) forwards}
+.cd-txt{display:flex;flex-direction:column;align-items:center;gap:6px;animation:fadeUp .5s .15s var(--spring) backwards}
 .cd-h{margin:4px 0 0;font-size:46px;font-weight:500;line-height:1;letter-spacing:-0.05em}
-@keyframes cdHop{0%{transform:none}16%{transform:translateY(3px) scale(1.07,.9)}44%{transform:translateY(-26px) scale(.95,1.06)}70%{transform:translateY(0) scale(1.06,.93)}86%{transform:translateY(-3px) scale(.99,1.01)}100%{transform:none}}
-@keyframes cdRise{from{transform:translateY(105%)}}
-@keyframes cdDraw{to{stroke-dashoffset:0}}
-@keyframes cdBowl{from{opacity:0;transform:scale(.3) rotate(-25deg)}to{opacity:1;transform:none}}
 @keyframes cdShut{to{transform:scale(1.2,.2);opacity:0}}
 @keyframes cdWink{from{opacity:1;transform:scaleX(.45)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.cd-sym,.cd-k,.cd-h .w>span,.cd-meta{animation:none}.cd-l0,.cd-l2{animation:none;opacity:1}.cd-l1{animation:none;stroke-dashoffset:0}.cd-eye.r{animation:none;opacity:0}.cd-wink{animation:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.cd-txt{animation:none}.cd-eye.r{animation:none;opacity:0}.cd-wink{animation:none;opacity:1}}
 .dtm{display:inline-flex;align-items:center;gap:4px}
 /* ---- motion ---- */
 :root{--spring:cubic-bezier(.32,.72,0,1);--pop:cubic-bezier(.34,1.56,.64,1)}
@@ -1062,39 +1045,9 @@ function cookDoneHTML(r, fresh) {
   return '<div class="cook done' + (fresh ? ' in' : '') + '" role="dialog" aria-label="Cooking finished"><div class="topbar" style="padding:16px 20px 0"><button class="iconbtn" data-act="cook-close" aria-label="Close" style="justify-content:flex-start">' + I.close + '</button><div class="eyebrow">' + esc(r.name) + '</div></div>' +
     '<div class="body cd-body"><div class="cd-mark">' +
       '<svg class="cd-sym" width="112" height="112" viewBox="0 0 48 48" aria-hidden="true"><circle class="cd-eye l" cx="17" cy="15" r="3.4" fill="currentColor"/><circle class="cd-eye r" cx="31" cy="15" r="3.4" fill="currentColor"/><path class="cd-wink" d="M27.6 15h6.8" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"/>' + '<path class="cd-mouth" transform="translate(-1.2 0)" d="M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z" fill="currentColor"/></svg></div>' +
-      '<div class="cd-txt"><span class="stepno cd-k">' + (n > 1 ? 'All ' + n + ' steps done' : 'Done') + '</span>' +
-      '<h2 class="cd-h" aria-label="Enjoy your meal."><span class="w"><span style="animation-delay:.86s">enjoy</span></span><span class="w"><span style="animation-delay:.95s">your</span> <span style="animation-delay:1.04s">meal.</span></span></h2>' +
-      '<svg class="cd-line" width="200" height="45" viewBox="-14.26 -68.53 532.36 120.83" aria-hidden="true"><circle class="cd-l0" cx="0" cy="0" r="5.94" fill="currentColor"/><path class="cd-l1" pathLength="1" d="M0 0L300 0A30 30 0 0 0 328.53 -20.73A30 30 0 0 0 317.63 -54.27A30 30 0 0 0 282.37 -54.27A30 30 0 0 0 271.47 -20.73A30 30 0 0 0 300 0L330 0A200 200 0 0 1 397.25 11.65L400.05 12.65" fill="none" stroke="currentColor" stroke-width="11.88" stroke-linejoin="round"/><g transform="translate(503.04 -76.88) scale(-3.3 3.3)"><path class="cd-l2" d="M7 26H26.4Q29 26 31.45 25.13L32.66 28.52Q29.2 29.9 25.5 32.95A11 9.5 0 0 1 7 26Z" fill="currentColor"/></g></svg>' +
-      '<div class="cd-meta">' + [r.timeMin ? CLOCK + r.timeMin + ' min' : '', n ? n + (n > 1 ? ' steps' : ' step') : '', 'for ' + (S.servings || r.servings || 1)].filter(Boolean).map((t) => '<span>' + t + '</span>').join('') + '</div></div></div>' +
+      '<div class="cd-txt"><span class="stepno">' + (n > 1 ? 'All ' + n + ' steps done' : 'Done') + '</span><h2 class="cd-h">enjoy<br>your meal.</h2></div></div>' +
     '<div class="cfoot"><div class="navs"><button class="cta alt" data-act="cook-back">Steps</button><label class="cta">' + (S.cook.busy ? 'Saving photo…' : 'Take a photo') + '<input class="sr" type="file" accept="image/*" capture="environment" data-file="dish" aria-label="Take a photo of your dish"></label></div>' +
     '<div style="padding:0 20px max(0px, env(safe-area-inset-bottom))"><button class="link" data-act="cook-close" style="width:100%;height:44px;text-decoration:none;color:var(--sub)">Close without a photo</button></div></div></div>';
-}
-function cookConfetti() {
-  const ov = overlayEl && overlayEl.querySelector('.cook.done'); if (!ov) return;
-  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const sym = ov.querySelector('.cd-sym'); if (!sym) return;
-  const b = sym.getBoundingClientRect(), o = ov.getBoundingClientRect();
-  const cx = b.left + b.width / 2 - o.left, cy = b.top + b.height * 0.42 - o.top;
-  const fx = document.createElement('div'); fx.className = 'cd-fx'; ov.appendChild(fx);
-  const R = (a, z) => a + Math.random() * (z - a);
-  for (let k = 0; k < 30; k++) {
-    const el = document.createElement('i');
-    const kind = k % 3 === 0 ? 'pill' : 'dot';
-    el.className = kind + (k % 4 === 1 ? ' dim' : '');
-    if (kind === 'dot') { const d = R(5, 10); el.style.width = el.style.height = d + 'px'; }
-    el.style.left = cx + 'px'; el.style.top = cy + 'px';
-    const ang = (-90 + R(-105, 105)) * Math.PI / 180, dist = R(80, 180);
-    const dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist, fall = R(240, 420), r1 = R(-160, 160), r2 = r1 + R(-200, 200);
-    const T = (x, y, r, sc) => 'translate(-50%,-50%) translate(' + x + 'px,' + y + 'px) rotate(' + r + 'deg) scale(' + sc + ')';
-    el.animate([
-      { transform: T(0, 0, 0, .3), opacity: 0, easing: 'cubic-bezier(.1,.85,.3,1)' },
-      { offset: .06, opacity: 1 },
-      { offset: .36, transform: T(dx, dy, r1, 1), opacity: 1, easing: 'cubic-bezier(.45,0,.85,.55)' },
-      { transform: T(dx * 1.3, dy + fall, r2, .85), opacity: 0 }
-    ], { duration: R(1700, 2400), delay: R(0, 90), fill: 'forwards' });
-    fx.appendChild(el);
-  }
-  setTimeout(() => fx.remove(), 2800);
 }
 function cookHTML(fresh) {
   const r = currentRecipe(); if (!r) return '';
@@ -1384,7 +1337,7 @@ document.addEventListener('click', (ev) => {
     case 'add-confirm': { const sel = new Set(S.addSheet.sel); if (!sel.size) break; const btn = app.querySelector('[data-act=tolist]'); closeOverlay(() => { S.addSheet = null; }); setTimeout(() => addToList(btn, sel), 120); break; }
     case 'cook': S.cook = { i: 0, dir: 0 }; renderOverlays(); try { navigator.wakeLock && navigator.wakeLock.request('screen').then((l) => { S.lock = l; }).catch(() => {}); } catch (e) {} break;
     case 'cook-step': { const r = currentRecipe(); const nx = Math.min((r.steps || []).length - 1, Math.max(0, S.cook.i + (+t.dataset.d))); if (nx === S.cook.i) break; S.cook.i = nx; S.cook.dir = +t.dataset.d; updateCook(); break; }
-    case 'cook-finish': S.cook.done = true; renderOverlays(); setTimeout(cookConfetti, 700); break;
+    case 'cook-finish': S.cook.done = true; renderOverlays(); break;
     case 'cook-back': S.cook.done = false; S.cook.dir = 0; renderOverlays(); break;
     case 'cook-go': { const nx = +t.dataset.i; if (nx === S.cook.i) break; S.cook.dir = nx > S.cook.i ? 1 : -1; S.cook.i = nx; updateCook(); break; }
     case 'cook-close': try { S.lock && S.lock.release(); } catch (e) {} S.lock = null; closeOverlay(() => { S.cook = null; }); break;
