@@ -291,6 +291,20 @@ select.inp{appearance:none;-webkit-appearance:none}
 .cook .cta{background:var(--field);color:var(--ink)}
 .cook .cta.alt{background:rgba(242,238,231,.12);color:var(--field)}
 .cook .cta:disabled{opacity:.35}
+.cook.done .cd-body{align-items:center;justify-content:center;text-align:center;gap:34px}
+.cd-mark{position:relative;width:112px;height:112px;display:flex;align-items:center;justify-content:center}
+.cd-sym{display:block;color:var(--field);overflow:visible}
+.cd-eye{transform-box:fill-box;transform-origin:center;animation:cdEye .5s var(--pop) backwards}
+.cd-mouth{transform-box:fill-box;transform-origin:20% 50%;animation:cdSmile .7s .3s var(--pop) backwards}
+.cd-pair{position:absolute;left:50%;top:50%;margin:-3px 0 0 -9px;display:flex;gap:6px;animation:cdPair .6s var(--pop) backwards}
+.cd-pair i{width:6px;height:6px;border-radius:50%;background:rgba(242,238,231,.35)}
+.cd-txt{display:flex;flex-direction:column;align-items:center;gap:6px;animation:fadeUp .5s .55s var(--spring) backwards}
+.cd-h{margin:4px 0 0;font-size:46px;font-weight:500;line-height:1;letter-spacing:-0.05em}
+.cd-sub{margin:0;font-size:16px;color:var(--sub);letter-spacing:-0.03em;word-break:keep-all}
+@keyframes cdEye{from{transform:translateY(-14px) scale(.4);opacity:0}}
+@keyframes cdSmile{from{transform:scaleX(.2);opacity:0}}
+@keyframes cdPair{from{opacity:0;scale:.3}}
+@media (prefers-reduced-motion:reduce){.cd-eye,.cd-mouth,.cd-pair,.cd-txt{animation:none}}
 .dtm{display:inline-flex;align-items:center;gap:4px}
 /* ---- motion ---- */
 :root{--spring:cubic-bezier(.32,.72,0,1);--pop:cubic-bezier(.34,1.56,.64,1)}
@@ -1029,8 +1043,20 @@ function menuHTML(fresh) {
   if (S.menu === 'confirm-clear') return '<button class="scrim" data-act="menu-close" aria-label="Close"></button><div class="' + cls + '" role="dialog"><h2>Clear the shopping list?</h2><div class="acts"><button class="cta alt" data-act="menu-close">Cancel</button><button class="cta" data-act="do-clear">Clear</button></div></div>';
   return '<button class="scrim" data-act="menu-close" aria-label="Close"></button><div class="' + cls + '" role="dialog"><div class="menu"><button data-act="edit">' + I.pen + 'Edit recipe</button><button class="danger" data-act="ask-del" style="border-bottom:0">' + I.trash + 'Delete recipe</button></div><button class="cta alt" data-act="menu-close" style="width:100%;margin-top:14px">Cancel</button></div>';
 }
+function cookDoneHTML(r, fresh) {
+  const n = (r.steps || []).length;
+  const eye = (cx, d) => '<circle class="cd-eye" style="animation-delay:' + d + 'ms" cx="' + cx + '" cy="15" r="3.4" fill="currentColor"/>';
+  const pairs = [[-118, -40, 0], [112, -64, 1], [-96, 70, 2], [122, 52, 3], [-30, -112, 4], [40, 104, 5]].map(([x, y, k]) => '<span class="cd-pair" style="transform:translate(' + x + 'px,' + y + 'px);animation-delay:' + (420 + k * 70) + 'ms"><i></i><i></i></span>').join('');
+  return '<div class="cook done' + (fresh ? ' in' : '') + '" role="dialog" aria-label="Cooking finished"><div class="topbar" style="padding:16px 20px 0"><button class="iconbtn" data-act="cook-close" aria-label="Close" style="justify-content:flex-start">' + I.close + '</button><div class="eyebrow">' + esc(r.name) + '</div></div>' +
+    '<div class="body cd-body"><div class="cd-mark">' + pairs +
+      '<svg class="cd-sym" width="112" height="112" viewBox="0 0 48 48" aria-hidden="true">' + eye(17, 80) + eye(31, 160) + '<path class="cd-mouth" transform="translate(-1.2 0)" d="M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z" fill="currentColor"/></svg></div>' +
+      '<div class="cd-txt"><span class="stepno">' + (n > 1 ? 'All ' + n + ' steps done' : 'Done') + '</span><h2 class="cd-h">guten appetit.</h2><p class="cd-sub">Enjoy your ' + esc(r.name) + '.</p></div></div>' +
+    '<div class="cfoot"><div class="navs"><button class="cta alt" data-act="cook-back">Steps</button><label class="cta">' + (S.cook.busy ? 'Saving photo…' : 'Take a photo') + '<input class="sr" type="file" accept="image/*" capture="environment" data-file="dish" aria-label="Take a photo of your dish"></label></div>' +
+    '<div style="padding:0 20px max(0px, env(safe-area-inset-bottom))"><button class="link" data-act="cook-close" style="width:100%;height:44px;text-decoration:none;color:var(--sub)">Close without a photo</button></div></div></div>';
+}
 function cookHTML(fresh) {
   const r = currentRecipe(); if (!r) return '';
+  if (S.cook.done) return cookDoneHTML(r, fresh);
   const steps = r.steps || [];
   const i = S.cook.i;
   const dc = S.cook.dir > 0 ? ' step-next' : S.cook.dir < 0 ? ' step-prev' : '';
@@ -1042,9 +1068,8 @@ function cookHTML(fresh) {
       ? '<span class="sr">Step ' + (i + 1) + ' of ' + steps.length + '</span><div class="txt' + dc + '">' + stepHTML(steps[i], cf, cmark) + '</div>' +
         (i < steps.length - 1 ? '<button class="peek' + (dc ? ' a-swap' : '') + '" data-act="cook-step" data-d="1" aria-label="Go to next step"><span class="stepno">Next</span><span class="ptxt">' + stepHTML(steps[i + 1], cf, false) + '</span></button>' : '')
       : '<div class="txt" style="font-size:20px;color:var(--sub)">No steps saved for this recipe. Edit the recipe to add them.</div>') + '</div>' +
-    '<div class="cfoot">' + (steps.length ? '<div class="navs' + (i === steps.length - 1 ? ' tight' : '') + '"><button class="cta alt" data-act="cook-step" data-d="-1"' + (i === 0 ? ' disabled' : '') + '>Previous</button>' +
-      (i < steps.length - 1 ? '<button class="cta" data-act="cook-step" data-d="1">Next</button>' : '<label class="cta">' + (S.cook.busy ? 'Saving photo…' : 'Take a photo') + '<input class="sr" type="file" accept="image/*" capture="environment" data-file="dish" aria-label="Take a photo of your dish"></label>') + '</div>' +
-      (i === steps.length - 1 ? '<div style="padding:0 20px max(0px, env(safe-area-inset-bottom))"><button class="link" data-act="cook-close" style="width:100%;height:44px;text-decoration:none;color:var(--sub)">Done without a photo</button></div>' : '') : '') + '</div></div>';
+    '<div class="cfoot">' + (steps.length ? '<div class="navs"><button class="cta alt" data-act="cook-step" data-d="-1"' + (i === 0 ? ' disabled' : '') + '>Previous</button>' +
+      (i < steps.length - 1 ? '<button class="cta" data-act="cook-step" data-d="1">Next</button>' : '<button class="cta" data-act="cook-finish">Finish</button>') + '</div>' : '') + '</div></div>';
 }
 function updateCook() {
   const ov = overlayEl && overlayEl.querySelector('.cook'); if (!ov) { renderOverlays(); return; }
@@ -1317,6 +1342,8 @@ document.addEventListener('click', (ev) => {
     case 'add-confirm': { const sel = new Set(S.addSheet.sel); if (!sel.size) break; const btn = app.querySelector('[data-act=tolist]'); closeOverlay(() => { S.addSheet = null; }); setTimeout(() => addToList(btn, sel), 120); break; }
     case 'cook': S.cook = { i: 0, dir: 0 }; renderOverlays(); try { navigator.wakeLock && navigator.wakeLock.request('screen').then((l) => { S.lock = l; }).catch(() => {}); } catch (e) {} break;
     case 'cook-step': { const r = currentRecipe(); const nx = Math.min((r.steps || []).length - 1, Math.max(0, S.cook.i + (+t.dataset.d))); if (nx === S.cook.i) break; S.cook.i = nx; S.cook.dir = +t.dataset.d; updateCook(); break; }
+    case 'cook-finish': S.cook.done = true; renderOverlays(); break;
+    case 'cook-back': S.cook.done = false; S.cook.dir = 0; renderOverlays(); break;
     case 'cook-go': { const nx = +t.dataset.i; if (nx === S.cook.i) break; S.cook.dir = nx > S.cook.i ? 1 : -1; S.cook.i = nx; updateCook(); break; }
     case 'cook-close': try { S.lock && S.lock.release(); } catch (e) {} S.lock = null; closeOverlay(() => { S.cook = null; }); break;
     case 'menu': S.menu = 'main'; renderOverlays(); break;
@@ -1618,7 +1645,7 @@ document.addEventListener('pointercancel', endShotDrag);
 /* ---------- cooking mode swipe ---------- */
 let sw = null;
 document.addEventListener('touchstart', (e) => {
-  if (!S.cook || !e.target.closest('.cook .body') || e.target.closest('button')) return;
+  if (!S.cook || S.cook.done || !e.target.closest('.cook .body') || e.target.closest('button')) return;
   sw = { x: e.touches[0].clientX, y: e.touches[0].clientY, dx: 0, lock: null, t0: Date.now() };
 }, { passive: true });
 document.addEventListener('touchmove', (e) => {
