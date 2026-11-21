@@ -1797,8 +1797,16 @@ async function init() {
   if (!window.supabase || !CFG.supabaseUrl || !CFG.supabaseAnonKey) { S.view = 'home'; S.dbState = 'off'; S.loaded = true; render(); return; }
   sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' } });
   sb.auth.onAuthStateChange((ev, session) => { if (session && session.user && !S.user) start(session.user); });
+  const qs = new URLSearchParams(location.search.slice(1) + '&' + location.hash.slice(1));
+  const back = qs.get('code'), authErr = qs.get('error_description') || qs.get('error');
   let session = null;
   try { const r = await sb.auth.getSession(); session = r.data && r.data.session; } catch (e) {}
+  if (!session && back && !S.user) {
+    try { const r = await sb.auth.exchangeCodeForSession(back); session = r.data && r.data.session; if (r.error && !session) S.login.err = 'Google sign-in didn\'t finish: ' + r.error.message; }
+    catch (e) { S.login.err = 'Google sign-in didn\'t finish: ' + (e && e.message || 'unknown error'); }
+  }
+  if (authErr && !session) S.login.err = 'Google sign-in didn\'t finish: ' + authErr.replace(/\+/g, ' ');
+  if ((back || authErr) && !session) { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
   if (session && session.user) start(session.user);
   else if (!S.user) render();
 }
