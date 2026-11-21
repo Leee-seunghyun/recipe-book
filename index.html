@@ -291,17 +291,16 @@ select.inp{appearance:none;-webkit-appearance:none}
 .cook .cta{background:var(--field);color:var(--ink)}
 .cook .cta.alt{background:rgba(242,238,231,.12);color:var(--field)}
 .cook .cta:disabled{opacity:.35}
-.cook.done .cd-body{align-items:center;justify-content:center;text-align:center;gap:34px}
-.cd-mark{position:relative;width:112px;height:112px;display:flex;align-items:center;justify-content:center}
-.cd-sym{display:block;color:var(--field);overflow:visible}
+.cook.done .cd-body{align-items:center;justify-content:flex-end;text-align:center;gap:110px;padding-bottom:55px;overflow:hidden}
+.cd-mark{position:relative;align-self:stretch;height:172px;margin:0 -24px;flex-shrink:0}
+.cd-sym{position:absolute;right:-1px;top:-98px;display:block;color:var(--field);overflow:visible}
 .cd-eye{transform-box:fill-box;transform-origin:center}
 .cd-eye.r{animation:cdShut .16s .7s ease-in forwards}
 .cd-wink{transform-box:fill-box;transform-origin:center;opacity:0;animation:cdWink .32s .82s var(--pop) forwards}
-.cd-txt{display:flex;flex-direction:column;align-items:center;gap:6px;animation:fadeUp .5s .15s var(--spring) backwards}
-.cd-h{margin:4px 0 0;font-size:46px;font-weight:500;line-height:1;letter-spacing:-0.05em}
-@keyframes cdShut{to{transform:scale(1.2,.2);opacity:0}}
-@keyframes cdWink{from{opacity:1;transform:scaleX(.45)}to{opacity:1;transform:none}}
-@media (prefers-reduced-motion:reduce){.cd-txt{animation:none}.cd-eye.r{animation:none;opacity:0}.cd-wink{animation:none;opacity:1}}
+.cd-h{margin:0;font-size:46px;font-weight:500;line-height:50px;letter-spacing:-2.2px;animation:fadeUp .5s .1s var(--spring) backwards}
+@keyframes cdShut{to{transform:rotate(-15deg) scale(1.25,.22) rotate(15deg);opacity:0}}
+@keyframes cdWink{from{opacity:1;transform:rotate(-15deg) scaleX(.4) rotate(15deg)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.cd-h{animation:none}.cd-eye.r{animation:none;opacity:0}.cd-wink{animation:none;opacity:1}}
 .dtm{display:inline-flex;align-items:center;gap:4px}
 /* ---- motion ---- */
 :root{--spring:cubic-bezier(.32,.72,0,1);--pop:cubic-bezier(.34,1.56,.64,1)}
@@ -1043,9 +1042,9 @@ function menuHTML(fresh) {
 function cookDoneHTML(r, fresh) {
   const n = (r.steps || []).length;
   return '<div class="cook done' + (fresh ? ' in' : '') + '" role="dialog" aria-label="Cooking finished"><div class="topbar" style="padding:16px 20px 0"><button class="iconbtn" data-act="cook-close" aria-label="Close" style="justify-content:flex-start">' + I.close + '</button><div class="eyebrow">' + esc(r.name) + '</div></div>' +
-    '<div class="body cd-body"><div class="cd-mark">' +
-      '<svg class="cd-sym" width="112" height="112" viewBox="0 0 48 48" aria-hidden="true"><circle class="cd-eye l" cx="17" cy="15" r="3.4" fill="currentColor"/><circle class="cd-eye r" cx="31" cy="15" r="3.4" fill="currentColor"/><path class="cd-wink" d="M27.6 15h6.8" fill="none" stroke="currentColor" stroke-width="3.6" stroke-linecap="round"/>' + '<path class="cd-mouth" transform="translate(-1.2 0)" d="M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z" fill="currentColor"/></svg></div>' +
-      '<div class="cd-txt"><span class="stepno">' + (n > 1 ? 'All ' + n + ' steps done' : 'Done') + '</span><h2 class="cd-h">enjoy<br>your meal.</h2></div></div>' +
+    '<div class="body cd-body">' +
+      '<h2 class="cd-h">enjoy<br>your meal!</h2>' +
+      '<div class="cd-mark"><svg class="cd-sym" width="286" height="372" viewBox="0 0 286 372" aria-hidden="true"><path class="cd-eye l" d="M133.919 163.085C145.386 160.013 152.191 148.226 149.119 136.759C146.046 125.293 134.26 118.488 122.793 121.56C111.326 124.633 104.521 136.419 107.594 147.886C110.666 159.353 122.453 166.158 133.919 163.085Z" fill="currentColor"/><path class="cd-eye r" d="M219.411 140.178C230.878 137.105 237.683 125.319 234.611 113.852C231.538 102.385 219.752 95.5804 208.285 98.6529C196.818 101.725 190.013 113.512 193.086 124.979C196.158 136.445 207.945 143.25 219.411 140.178Z" fill="currentColor"/><path class="cd-wink" d="M193.085 124.979L234.61 113.852" stroke-width="22.7592" stroke-linecap="round" stroke="currentColor" fill="none"/><path class="cd-mouth" d="M77.9611 227.821L196.429 196.078C207.014 193.242 216.819 188.716 225.844 182.502L282.553 143.287C285.037 141.632 288.072 141.02 291.003 141.582C293.934 142.143 296.527 143.834 298.223 146.289C299.92 148.744 300.584 151.768 300.072 154.708C299.561 157.648 297.915 160.27 295.489 162.008L232.928 205.279C221.915 213.029 211.707 224.6 202.305 239.991C194.798 250.261 184.201 258.591 171.817 263.958C159.433 269.325 145.801 271.495 132.594 270.203C119.388 268.91 107.182 264.211 97.4768 256.682C87.7713 249.153 80.9883 239.122 77.9611 227.821Z" fill="currentColor"/></svg></div></div>' +
     '<div class="cfoot"><div class="navs"><button class="cta alt" data-act="cook-back">Steps</button><label class="cta">' + (S.cook.busy ? 'Saving photo…' : 'Take a photo') + '<input class="sr" type="file" accept="image/*" capture="environment" data-file="dish" aria-label="Take a photo of your dish"></label></div>' +
     '<div style="padding:0 20px max(0px, env(safe-area-inset-bottom))"><button class="link" data-act="cook-close" style="width:100%;height:44px;text-decoration:none;color:var(--sub)">Close without a photo</button></div></div></div>';
 }
