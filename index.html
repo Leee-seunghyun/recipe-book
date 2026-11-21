@@ -294,17 +294,17 @@ select.inp{appearance:none;-webkit-appearance:none}
 .cook.done .cd-body{align-items:center;justify-content:center;text-align:center;gap:34px}
 .cd-mark{position:relative;width:112px;height:112px;display:flex;align-items:center;justify-content:center}
 .cd-sym{display:block;color:var(--field);overflow:visible}
-.cd-eye{transform-box:fill-box;transform-origin:center;animation:cdEye .5s var(--pop) backwards}
+.cd-eye{transform-box:fill-box;transform-origin:center;animation:cdEye .5s .08s var(--pop) backwards}
+.cd-eye.r{animation:cdEye .5s .16s var(--pop) backwards,cdShut .16s 1.3s ease-in forwards}
+.cd-wink{stroke-dasharray:1;stroke-dashoffset:1;animation:cdWink .28s 1.42s var(--spring) forwards}
 .cd-mouth{transform-box:fill-box;transform-origin:20% 50%;animation:cdSmile .7s .3s var(--pop) backwards}
-.cd-pair{position:absolute;left:50%;top:50%;margin:-3px 0 0 -9px;display:flex;gap:6px;animation:cdPair .6s var(--pop) backwards}
-.cd-pair i{width:6px;height:6px;border-radius:50%;background:rgba(242,238,231,.35)}
 .cd-txt{display:flex;flex-direction:column;align-items:center;gap:6px;animation:fadeUp .5s .55s var(--spring) backwards}
 .cd-h{margin:4px 0 0;font-size:46px;font-weight:500;line-height:1;letter-spacing:-0.05em}
-.cd-sub{margin:0;font-size:16px;color:var(--sub);letter-spacing:-0.03em;word-break:keep-all}
 @keyframes cdEye{from{transform:translateY(-14px) scale(.4);opacity:0}}
 @keyframes cdSmile{from{transform:scaleX(.2);opacity:0}}
-@keyframes cdPair{from{opacity:0;scale:.3}}
-@media (prefers-reduced-motion:reduce){.cd-eye,.cd-mouth,.cd-pair,.cd-txt{animation:none}}
+@keyframes cdShut{to{transform:scaleY(.1);opacity:0}}
+@keyframes cdWink{to{stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.cd-eye,.cd-mouth,.cd-txt{animation:none}.cd-eye.r{opacity:0}.cd-wink{animation:none;stroke-dashoffset:0}}
 .dtm{display:inline-flex;align-items:center;gap:4px}
 /* ---- motion ---- */
 :root{--spring:cubic-bezier(.32,.72,0,1);--pop:cubic-bezier(.34,1.56,.64,1)}
@@ -1045,12 +1045,10 @@ function menuHTML(fresh) {
 }
 function cookDoneHTML(r, fresh) {
   const n = (r.steps || []).length;
-  const eye = (cx, d) => '<circle class="cd-eye" style="animation-delay:' + d + 'ms" cx="' + cx + '" cy="15" r="3.4" fill="currentColor"/>';
-  const pairs = [[-118, -40, 0], [112, -64, 1], [-96, 70, 2], [122, 52, 3], [-30, -112, 4], [74, -110, 5]].map(([x, y, k]) => '<span class="cd-pair" style="transform:translate(' + x + 'px,' + y + 'px);animation-delay:' + (420 + k * 70) + 'ms"><i></i><i></i></span>').join('');
   return '<div class="cook done' + (fresh ? ' in' : '') + '" role="dialog" aria-label="Cooking finished"><div class="topbar" style="padding:16px 20px 0"><button class="iconbtn" data-act="cook-close" aria-label="Close" style="justify-content:flex-start">' + I.close + '</button><div class="eyebrow">' + esc(r.name) + '</div></div>' +
-    '<div class="body cd-body"><div class="cd-mark">' + pairs +
-      '<svg class="cd-sym" width="112" height="112" viewBox="0 0 48 48" aria-hidden="true">' + eye(17, 80) + eye(31, 160) + '<path class="cd-mouth" transform="translate(-1.2 0)" d="M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z" fill="currentColor"/></svg></div>' +
-      '<div class="cd-txt"><span class="stepno">' + (n > 1 ? 'All ' + n + ' steps done' : 'Done') + '</span><h2 class="cd-h">guten appetit.</h2><p class="cd-sub">Enjoy your ' + esc(r.name) + '.</p></div></div>' +
+    '<div class="body cd-body"><div class="cd-mark">' +
+      '<svg class="cd-sym" width="112" height="112" viewBox="0 0 48 48" aria-hidden="true"><circle class="cd-eye l" cx="17" cy="15" r="3.4" fill="currentColor"/><circle class="cd-eye r" cx="31" cy="15" r="3.4" fill="currentColor"/><path class="cd-wink" d="M27.3 16Q31 11.6 34.7 16" pathLength="1" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/>' + '<path class="cd-mouth" transform="translate(-1.2 0)" d="M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z" fill="currentColor"/></svg></div>' +
+      '<div class="cd-txt"><span class="stepno">' + (n > 1 ? 'All ' + n + ' steps done' : 'Done') + '</span><h2 class="cd-h">enjoy your meal.</h2></div></div>' +
     '<div class="cfoot"><div class="navs"><button class="cta alt" data-act="cook-back">Steps</button><label class="cta">' + (S.cook.busy ? 'Saving photo…' : 'Take a photo') + '<input class="sr" type="file" accept="image/*" capture="environment" data-file="dish" aria-label="Take a photo of your dish"></label></div>' +
     '<div style="padding:0 20px max(0px, env(safe-area-inset-bottom))"><button class="link" data-act="cook-close" style="width:100%;height:44px;text-decoration:none;color:var(--sub)">Close without a photo</button></div></div></div>';
 }
