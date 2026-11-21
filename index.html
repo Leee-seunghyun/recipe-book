@@ -281,6 +281,16 @@ select.inp{appearance:none;-webkit-appearance:none}
 .cook .navs{display:flex;gap:10px;padding:12px 20px calc(20px + env(safe-area-inset-bottom))}
 .cook .navs .cta{flex:1}
 .cook .navs.tight{padding-bottom:14px}
+/* cooking mode — inverted palette: Ink ground, Field text */
+.cook{background:var(--ink);color:var(--field);--sub:rgba(242,238,231,.6);--line:rgba(242,238,231,.18)}
+.cook .iconbtn{color:var(--field)}
+.cook .pip{background:rgba(242,238,231,.22);color:rgba(242,238,231,.7)}
+.cook .dot.on .pip{background:rgba(242,238,231,.14);color:var(--field)}
+.cook .peek .ptxt{color:rgba(242,238,231,.45)}
+.cook .amt{background:rgba(242,238,231,.14)}
+.cook .cta{background:var(--field);color:var(--ink)}
+.cook .cta.alt{background:rgba(242,238,231,.12);color:var(--field)}
+.cook .cta:disabled{opacity:.35}
 .dtm{display:inline-flex;align-items:center;gap:4px}
 /* ---- motion ---- */
 :root{--spring:cubic-bezier(.32,.72,0,1);--pop:cubic-bezier(.34,1.56,.64,1)}
@@ -575,6 +585,7 @@ function renderOverlays() {
   else if (S.tagSheet) h += tagSheetHTML(k.sheet !== lastOv.sheet);
   if (S.menu) h += menuHTML(k.menu !== lastOv.menu);
   if (S.cook) h += cookHTML(k.cook !== lastOv.cook);
+  { const tc = document.querySelector('meta[name=theme-color]'); if (tc) tc.content = S.cook ? '#3A2A21' : '#FAFAFA'; }
   lastOv = k;
   overlayEl.innerHTML = h;
 }
