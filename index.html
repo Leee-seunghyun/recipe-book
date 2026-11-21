@@ -1046,7 +1046,7 @@ function menuHTML(fresh) {
 function cookDoneHTML(r, fresh) {
   const n = (r.steps || []).length;
   const eye = (cx, d) => '<circle class="cd-eye" style="animation-delay:' + d + 'ms" cx="' + cx + '" cy="15" r="3.4" fill="currentColor"/>';
-  const pairs = [[-118, -40, 0], [112, -64, 1], [-96, 70, 2], [122, 52, 3], [-30, -112, 4], [40, 104, 5]].map(([x, y, k]) => '<span class="cd-pair" style="transform:translate(' + x + 'px,' + y + 'px);animation-delay:' + (420 + k * 70) + 'ms"><i></i><i></i></span>').join('');
+  const pairs = [[-118, -40, 0], [112, -64, 1], [-96, 70, 2], [122, 52, 3], [-30, -112, 4], [74, -110, 5]].map(([x, y, k]) => '<span class="cd-pair" style="transform:translate(' + x + 'px,' + y + 'px);animation-delay:' + (420 + k * 70) + 'ms"><i></i><i></i></span>').join('');
   return '<div class="cook done' + (fresh ? ' in' : '') + '" role="dialog" aria-label="Cooking finished"><div class="topbar" style="padding:16px 20px 0"><button class="iconbtn" data-act="cook-close" aria-label="Close" style="justify-content:flex-start">' + I.close + '</button><div class="eyebrow">' + esc(r.name) + '</div></div>' +
     '<div class="body cd-body"><div class="cd-mark">' + pairs +
       '<svg class="cd-sym" width="112" height="112" viewBox="0 0 48 48" aria-hidden="true">' + eye(17, 80) + eye(31, 160) + '<path class="cd-mouth" transform="translate(-1.2 0)" d="M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z" fill="currentColor"/></svg></div>' +
