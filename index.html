@@ -302,7 +302,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 .cd-eye.r{animation:cdPop .55s .7s both,cdShut .14s 1s ease-in forwards}
 .cd-wink{transform-box:fill-box;transform-origin:center;opacity:0;animation:cdWink .5s 1.08s forwards}
 .cd-mouth{transform-box:fill-box;transform-origin:20% 60%;animation:cdMouth .7s .5s both}
-.cd-h{position:relative;z-index:4;margin:0;font-size:46px;font-weight:500;line-height:50px;letter-spacing:-2.2px}
+.cd-h{margin:0;font-size:46px;font-weight:500;line-height:50px;letter-spacing:-2.2px}
 .cd-h .ln{display:block;overflow:hidden;padding:0 .1em .16em;margin:0 -.1em -.16em}
 .cd-h .ln>span{display:inline-block;transform-origin:50% 100%;animation:cdRise .8s both}
 .cd-h .ln:nth-child(1)>span{animation-delay:.06s}
@@ -311,8 +311,6 @@ select.inp{appearance:none;-webkit-appearance:none}
 .cook.done .cfoot .navs .cta:nth-child(1){animation-delay:.42s}
 .cook.done .cfoot .navs .cta:nth-child(2){animation-delay:.48s}
 .cook.done .cfoot .link{animation:cdUp .7s .56s both}
-.cd-fx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3}
-.cd-fx i{position:absolute;left:0;top:0;display:block;background:var(--field);border-radius:99px;will-change:transform,opacity}
 @keyframes cdLeave{to{opacity:0;transform:translateY(-18px) scale(.98)}}
 @keyframes cdRise{0%{transform:translateY(115%) scaleY(1.25) rotate(3deg)}55%{transform:translateY(-9%) scaleY(.94) rotate(-1deg)}75%{transform:translateY(3%) scaleY(1.02)}90%{transform:translateY(-1%)}100%{transform:none}}
 @keyframes cdUp{0%{opacity:0;transform:translateY(22px)}55%{opacity:1;transform:translateY(-4px)}78%{transform:translateY(1.5px)}100%{opacity:1;transform:none}}
@@ -1071,35 +1069,6 @@ function cookDoneHTML(r, fresh) {
     '<div class="cfoot"><div class="navs"><button class="cta alt" data-act="cook-back">Steps</button><label class="cta">' + (S.cook.busy ? 'Saving photo…' : 'Take a photo') + '<input class="sr" type="file" accept="image/*" capture="environment" data-file="dish" aria-label="Take a photo of your dish"></label></div>' +
     '<div style="padding:0 20px max(8px, env(safe-area-inset-bottom))"><button class="link" data-act="cook-close" style="width:100%;height:44px;text-decoration:none;color:var(--sub)">Close without a photo</button></div></div></div>';
 }
-function cookConfetti() {
-  const ov = overlayEl && overlayEl.querySelector('.cook.done'); if (!ov) return;
-  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const m = ov.querySelector('.cd-mouth'); if (!m) return;
-  const b = m.getBoundingClientRect(), o = ov.getBoundingClientRect();
-  const ox = b.left + b.width * 0.3 - o.left, oy = b.top + b.height * 0.5 - o.top;
-  const fx = document.createElement('div'); fx.className = 'cd-fx'; ov.appendChild(fx);
-  const R = (a, z) => a + Math.random() * (z - a);
-  for (let k = 0; k < 24; k++) {
-    const el = document.createElement('i');
-    const pill = k % 3 === 0;
-    const d = pill ? 0 : R(6, 12);
-    el.style.width = (pill ? R(14, 20) : d) + 'px'; el.style.height = (pill ? 6 : d) + 'px';
-    if (k % 4 === 1) el.style.opacity = '.45';
-    const ang = R(-160, -55) * Math.PI / 180, dist = R(120, 260);
-    const dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist, fall = R(220, 380);
-    const r0 = pill ? -15 : 0, r1 = r0 + R(-90, 90), r2 = r1 + R(-160, 160);
-    const T = (x, y, r, sc) => 'translate(' + (ox + x) + 'px,' + (oy + y) + 'px) translate(-50%,-50%) rotate(' + r + 'deg) scale(' + sc + ')';
-    el.animate([
-      { transform: T(0, 0, r0, .2), opacity: 0, easing: 'cubic-bezier(.12,.8,.3,1)' },
-      { offset: .05, opacity: 1 },
-      { offset: .38, transform: T(dx, dy, r1, 1), easing: 'cubic-bezier(.5,0,.85,.6)' },
-      { offset: .85, opacity: 1 },
-      { transform: T(dx * 1.25, dy + fall, r2, .9), opacity: 0 }
-    ], { duration: R(1500, 2100), delay: R(0, 80), fill: 'both' });
-    fx.appendChild(el);
-  }
-  setTimeout(() => fx.remove(), 2400);
-}
 function cookHTML(fresh) {
   const r = currentRecipe(); if (!r) return '';
   if (S.cook.done) return cookDoneHTML(r, fresh);
@@ -1391,7 +1360,7 @@ document.addEventListener('click', (ev) => {
     case 'cook-finish': {
       const ov = overlayEl && overlayEl.querySelector('.cook');
       const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (ov && !reduce) { ov.classList.add('leaving'); setTimeout(() => { if (S.cook) { S.cook.done = true; renderOverlays(); setTimeout(cookConfetti, 1060); } }, 260); }
+      if (ov && !reduce) { ov.classList.add('leaving'); setTimeout(() => { if (S.cook) { S.cook.done = true; renderOverlays(); } }, 260); }
       else { S.cook.done = true; renderOverlays(); }
       break;
     }
