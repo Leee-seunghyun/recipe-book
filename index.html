@@ -645,6 +645,7 @@ function soft() {
   if (S.view === 'home') { const c = document.getElementById('chips'); if (c) c.innerHTML = chipsHTML(); renderResults(); syncBar(); chipFades(); }
   else if (S.view === 'detail') { const r = currentRecipe(); if ((r ? JSON.stringify(r) : '') !== detailSig) render(); }
   else if (S.view === 'shop') { if (Date.now() - (S.shopQuiet || 0) > 1500) render(); }
+  if (window.__splash && S.loaded) window.__splash();
 }
 let lastOv = { sheet: '', menu: '', cook: '' };
 function renderOverlays() {
