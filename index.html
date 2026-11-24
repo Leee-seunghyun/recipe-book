@@ -431,27 +431,9 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro{position:fixed;inset:0;z-index:150;background:#FAFAFA;color:#3A2A21;overflow:hidden}
 #intro .in-wrap{position:absolute;inset:0;max-width:480px;margin:0 auto;overflow:hidden}
 #intro .in-skip{position:absolute;right:12px;top:calc(18px + env(safe-area-inset-top));z-index:5;height:40px;padding:0 10px;border:0;background:none;color:inherit;opacity:.55;font:inherit;font-size:14px}
-#intro .in-strip{position:absolute;left:0;right:0;top:calc(46% - 40px);height:80px}
-#intro .in-track{position:absolute;left:0;top:0;display:flex;gap:6px;will-change:transform}
-#intro .in-track img{width:64px;height:80px;object-fit:cover;border-radius:14px;display:block;flex-shrink:0;will-change:transform,opacity}
-#intro .in-card{position:absolute;overflow:hidden;border-radius:24px;background:#E9E3D9;will-change:transform,clip-path}
-#intro .in-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#intro .in-card .chip{position:absolute;left:16px;top:16px;height:28px;padding:0 12px;border-radius:14px;background:rgba(250,250,250,.86);color:#3A2A21;font-size:12px;display:flex;align-items:center;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-#intro .in-card .stats{position:absolute;left:18px;bottom:16px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4),0 2px 18px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:6px}
-#intro .in-card .stat b{display:block;font-size:30px;font-weight:500;letter-spacing:-1.2px;line-height:30px}
-#intro .in-card .stat b small{font-size:13px;font-weight:400;letter-spacing:0;margin-left:3px}
-#intro .in-card .stat span{display:block;font-size:11px;font-weight:500;margin-top:2px}
-#intro .in-card .sym{position:absolute;right:16px;bottom:18px;width:56px;height:56px;color:#fff;filter:drop-shadow(0 1px 10px rgba(0,0,0,.3))}
-#intro .in-card .chip,#intro .in-card .stat,#intro .in-card .sym{opacity:0}
-#intro .in-card.show .chip{animation:inPop .5s .05s cubic-bezier(.3,1.5,.5,1) forwards}
-#intro .in-card.show .stat{animation:inUp .55s cubic-bezier(.3,1.45,.5,1) forwards}
-#intro .in-card.show .stat:nth-child(1){animation-delay:.08s}
-#intro .in-card.show .stat:nth-child(2){animation-delay:.14s}
-#intro .in-card.show .stat:nth-child(3){animation-delay:.2s}
-#intro .in-card.show .sym{animation:inPop .55s .22s cubic-bezier(.3,1.6,.5,1) forwards}
-@keyframes inUp{0%{opacity:0;transform:translateY(14px)}60%{opacity:1;transform:translateY(-2px)}100%{opacity:1;transform:none}}
-@keyframes inPop{0%{opacity:0;transform:scale(.6)}60%{opacity:1;transform:scale(1.08)}100%{opacity:1;transform:none}}
-#intro .in-end{position:absolute;inset:0;pointer-events:none}
+#intro .in-th{position:absolute;left:0;top:0;width:76px;height:90px;border-radius:20px;overflow:hidden;will-change:transform,opacity}
+#intro .in-th img,#intro .in-card img{width:100%;height:100%;object-fit:cover;display:block}
+#intro .in-card{position:absolute;left:0;top:0;overflow:hidden;border-radius:44px;will-change:transform}
 #intro .in-wm{position:absolute;left:50%;top:calc(46% - 22px);width:116px;height:44px;margin-left:-58px;clip-path:inset(0 100% 0 0);color:#3A2A21}
 #intro.end .in-wm{animation:inWipe .7s cubic-bezier(.6,0,.2,1) forwards}
 @keyframes inWipe{to{clip-path:inset(0 0 0 0)}}
@@ -459,6 +441,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro.end .in-tag{animation:inUp .6s .55s cubic-bezier(.3,1.45,.5,1) forwards}
 #intro .in-go{position:absolute;left:22px;right:22px;bottom:calc(28px + env(safe-area-inset-bottom));height:52px;border:0;background:#3A2A21;color:#FAFAFA;font:inherit;font-size:15px;opacity:0;pointer-events:none}
 #intro.end .in-go{animation:inUp .6s .75s cubic-bezier(.3,1.45,.5,1) forwards;pointer-events:auto}
+@keyframes inUp{0%{opacity:0;transform:translateY(14px)}60%{opacity:1;transform:translateY(-2px)}100%{opacity:1;transform:none}}
 #intro.end .in-skip{opacity:0;pointer-events:none;transition:opacity .3s}
 #intro.out{transform:translateY(-100%);transition:transform .75s cubic-bezier(.7,0,.2,1)}
 @media (prefers-reduced-motion:reduce){#intro *{animation-duration:.01ms!important;transition-duration:.01ms!important}}
@@ -472,75 +455,72 @@ function runIntro(force) {
   if (seen && !force) return;
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var IMG = ['salad', 'pasta', 'pie', 'gimbap', 'fries', 'pancake'];
-  var CARDS = [
-    ['pancake', 'Fluffy pancakes', [['20', 'min', 'time · Zeit'], ['5', 'items', 'ingredients · Zutaten'], ['2', '', 'servings · Portionen']]],
-    ['pasta', 'Tomato rigatoni', [['25', 'min', 'time · Zeit'], ['6', 'items', 'ingredients · Zutaten'], ['2', '', 'servings · Portionen']]],
-    ['gimbap', 'Gimbap', [['40', 'min', 'time · Zeit'], ['8', 'items', 'ingredients · Zutaten'], ['3', 'rolls', 'servings · Portionen']]],
-    ['salad', 'Pomegranate salad', [['10', 'min', 'time · Zeit'], ['7', 'items', 'ingredients · Zutaten'], ['1', '', 'serving · Portion']]]
-  ];
-  var M = 'M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z';
-  var SYM = '<svg class="sym" viewBox="0 0 48 48" aria-hidden="true"><circle cx="17" cy="15" r="3.4" fill="currentColor"/><circle cx="31" cy="15" r="3.4" fill="currentColor"/><path transform="translate(-1.2 0)" d="' + M + '" fill="currentColor"/></svg>';
-  var thumbs = IMG.concat(IMG, IMG).map(function (k) { return '<img src="intro/' + k + '.jpg" alt="">'; }).join('');
+  var CARDS = ['pancake', 'pasta', 'gimbap', 'salad'];
   var el = document.createElement('div'); el.id = 'intro'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Welcome to löffel');
   el.innerHTML = '<div class="in-wrap"><button class="in-skip" type="button">Skip</button>' +
-    '<div class="in-strip"><div class="in-track">' + thumbs + '</div></div>' +
     '<div class="in-end"><svg class="in-wm" viewBox="0 -720 1921 732" aria-label="löffel"><g transform="scale(1 -1)" fill="currentColor"><path transform="translate(-66 0)" d="M66 0V700H161V0Z"/><path transform="translate(106.0 0)" d="M292 -12Q217 -12 160.0 21.5Q103 55 70.5 114.0Q38 173 38 250Q38 327 70.0 386.0Q102 445 159.0 478.5Q216 512 290 512Q364 512 421.0 478.5Q478 445 510.0 386.0Q542 327 542 250Q542 173 510.0 114.0Q478 55 421.5 21.5Q365 -12 292 -12ZM292 75Q337 75 372.0 97.5Q407 120 426.5 159.0Q446 198 446 250Q446 302 426.5 341.0Q407 380 371.0 402.5Q335 425 290 425Q244 425 209.0 402.5Q174 380 154.0 341.0Q134 302 134 250Q134 198 154.0 159.0Q174 120 210.0 97.5Q246 75 292 75ZM414 613Q392 613 376.0 629.0Q360 645 360 666Q360 688 376.0 704.0Q392 720 414 720Q436 720 451.5 704.0Q467 688 467 666Q467 645 451.5 629.0Q436 613 414 613ZM164 613Q142 613 126.0 629.0Q110 645 110 666Q110 689 126.0 704.5Q142 720 164 720Q186 720 201.5 704.5Q217 689 217 666Q217 645 201.5 629.0Q186 613 164 613Z"/><path transform="translate(631.0 0)" d="M116 0V421H27V500H116V555Q116 634 154.0 674.5Q192 715 269 715Q292 715 319.0 707.5Q346 700 374 687L339 614Q318 624 302.5 628.5Q287 633 276 633Q243 633 227.0 611.5Q211 590 211 545V500H349V421H211V0Z"/><path transform="translate(952.0 0)" d="M116 0V421H27V500H116V555Q116 634 154.0 674.5Q192 715 269 715Q292 715 319.0 707.5Q346 700 374 687L339 614Q318 624 302.5 628.5Q287 633 276 633Q243 633 227.0 611.5Q211 590 211 545V500H349V421H211V0Z"/><path transform="translate(1267.0 0)" d="M287 -12Q214 -12 158.0 21.5Q102 55 70.0 114.0Q38 173 38 250Q38 327 70.0 386.0Q102 445 158.5 478.5Q215 512 288 512Q357 512 409.0 477.5Q461 443 490.5 379.5Q520 316 520 230H135Q140 156 184.5 114.5Q229 73 294 73Q344 73 377.5 96.5Q411 120 430 156L512 118Q492 79 460.0 49.5Q428 20 384.5 4.0Q341 -12 287 -12ZM141 305H418Q415 345 396.5 372.5Q378 400 349.5 415.0Q321 430 286 430Q252 430 220.0 415.5Q188 401 166.5 373.0Q145 345 141 305Z"/><path transform="translate(1760.0 0)" d="M66 0V700H161V0Z"/></g></svg><p class="in-tag">Save it, shop it, spoon it.</p></div>' +
     '<button class="in-go" type="button">Get started</button></div>';
   document.body.appendChild(el);
-  var wrap = el.querySelector('.in-wrap'), track = el.querySelector('.in-track'), timers = [], ended = false;
+  var wrap = el.querySelector('.in-wrap'), end = el.querySelector('.in-end'), timers = [], raf = 0, ended = false;
   var at = function (ms, fn) { timers.push(setTimeout(fn, ms)); };
+  var stop = function () { timers.forEach(clearTimeout); cancelAnimationFrame(raf); };
   var finish = function () {
-    if (ended) return; ended = true; timers.forEach(clearTimeout);
+    if (ended) return; ended = true; stop();
     try { localStorage.setItem('loeffel_intro_v1', '1'); } catch (e) {}
     el.classList.add('out'); setTimeout(function () { el.remove(); }, 800);
   };
-  var toEnd = function () { timers.forEach(clearTimeout); wrap.querySelectorAll('.in-card,.in-strip').forEach(function (n) { n.remove(); }); el.classList.add('end'); };
   el.querySelector('.in-skip').addEventListener('click', finish);
   el.querySelector('.in-go').addEventListener('click', finish);
-  if (reduce || !track.animate) { toEnd(); return; }
-  var W = wrap.clientWidth, H = wrap.clientHeight;
-  var cw = W - 48, ch = Math.min(470, H - 230), cl = 24, ct = Math.round(H * 0.46 - ch / 2);
-  var mkCard = function (c) {
-    var d = document.createElement('div'); d.className = 'in-card';
-    d.innerHTML = '<img src="intro/' + c[0] + '.jpg" alt=""><span class="chip">' + c[1] + '</span><div class="stats">' +
-      c[2].map(function (s) { return '<div class="stat"><b>' + s[0] + (s[1] ? '<small>' + s[1] + '</small>' : '') + '</b><span>' + s[2] + '</span></div>'; }).join('') + '</div>' + SYM;
-    d.style.cssText = 'left:' + cl + 'px;top:' + ct + 'px;width:' + cw + 'px;height:' + ch + 'px';
-    wrap.insertBefore(d, wrap.querySelector('.in-end')); return d;
+  if (reduce || !el.animate) { el.classList.add('end'); return; }
+  var W = wrap.clientWidth, H = wrap.clientHeight, cy = H * 0.5;
+  var TW = 76, TH = 90, GAP = 6, PITCH = TW + GAP;
+  // thumbnails: a long strip that enters from the right and keeps scrolling left
+  var N = 18, thumbs = [];
+  for (var i = 0; i < N; i++) { var t = document.createElement('div'); t.className = 'in-th'; t.innerHTML = '<img src="intro/' + IMG[i % IMG.length] + '.jpg" alt="">'; wrap.insertBefore(t, end); thumbs.push(t); }
+  var CW = Math.round(W * 0.86), CH = Math.round(Math.min(H * 0.56, CW * 1.32)), CX = (W - CW) / 2, CYT = cy - CH / 2;
+  var t0 = performance.now(), RUSH = 1900, RUSH_D = 620;
+  var ease = function (p) { return p * p * p; };
+  var frame = function (now) {
+    var t = now - t0;
+    // scroll offset: glide in from the right, then constant speed, then an accelerating rush
+    var enter = Math.min(1, t / 700), x0 = W + 10 - (1 - Math.pow(1 - enter, 3)) * (W * 0.92) - Math.max(0, t - 700) * 0.075;
+    var r = t > RUSH ? Math.min(1, (t - RUSH) / RUSH_D) : 0;
+    x0 -= ease(r) * W * 1.15;
+    for (var k = 0; k < N; k++) {
+      var x = x0 + k * PITCH, s = 1, o = 1;
+      if (r > 0) {
+        // perspective: thumbnails shrink as they slide toward the left edge
+        var rel = Math.max(0, Math.min(1, (x + TW) / (W + TW)));
+        s = (0.35 + rel * 0.75) * (1 - r * 0.25) + r * rel * 0.6; o = Math.min(1, rel * 3) * (1 - Math.max(0, r - 0.75) * 4);
+      }
+      thumbs[k].style.transform = 'translate(' + x.toFixed(1) + 'px,' + (cy - TH / 2).toFixed(1) + 'px) scale(' + s.toFixed(3) + ')';
+      thumbs[k].style.opacity = o.toFixed(3);
+    }
+    if (t < RUSH + RUSH_D + 40 && !ended) raf = requestAnimationFrame(frame); else thumbs.forEach(function (n) { n.remove(); });
   };
-  // 1 — the strip slides in from the right and drifts left
-  var step = 70, startX = W, drift = track.animate([{ transform: 'translateX(' + startX + 'px)' }, { offset: .35, transform: 'translateX(' + (startX - step * 7) + 'px)' }, { transform: 'translateX(' + (startX - step * 10) + 'px)' }], { duration: 1700, easing: 'cubic-bezier(.2,.7,.4,1)', fill: 'forwards' });
-  // 2 — the strip rushes left and shrinks away while one thumbnail grows into the first card
-  at(1500, function () {
-    var imgs = [].slice.call(track.children), target = null, best = 1e9, wr = wrap.getBoundingClientRect();
-    imgs.forEach(function (im) { var r = im.getBoundingClientRect(); var dx = Math.abs(r.left - wr.left - W * 0.62); if (/pancake/.test(im.src) && dx < best) { best = dx; target = im; } });
-    if (!target) target = imgs[imgs.length - 1];
-    var tr = target.getBoundingClientRect(), x0 = tr.left - wr.left, y0 = tr.top - wr.top;
-    imgs.forEach(function (im) {
-      var r = im.getBoundingClientRect(), rel = (r.left - wr.left) / W;
-      if (im === target) { im.style.visibility = 'hidden'; return; }
-      im.animate([{ transform: 'none', opacity: 1 }, { transform: 'translateX(' + (-120 - (1 - rel) * 60) + 'px) scale(' + (0.35 + rel * 0.3) + ')', opacity: 0 }], { duration: 520 + rel * 120, easing: 'cubic-bezier(.55,0,.75,.2)', fill: 'forwards' });
-    });
-    var card = mkCard(CARDS[0]);
-    card.animate([
-      { left: x0 + 'px', top: y0 + 'px', width: tr.width + 'px', height: tr.height + 'px', borderRadius: '14px' },
-      { offset: .72, left: (cl - 4) + 'px', top: (ct - 6) + 'px', width: (cw + 8) + 'px', height: (ch + 10) + 'px', borderRadius: '24px' },
-      { left: cl + 'px', top: ct + 'px', width: cw + 'px', height: ch + 'px', borderRadius: '24px' }
-    ], { duration: 820, easing: 'cubic-bezier(.6,0,.2,1)' });
-    at(700, function () { card.classList.add('show'); });
-    // 3 — cards swipe through: out to the left, the next one opens from the right edge
-    var cur = card, i = 0;
-    var next = function () {
-      i++;
-      var out = cur;
-      out.animate([{ transform: 'none', clipPath: 'inset(0 0 0 0 round 24px)' }, { transform: 'translateX(-28%)', clipPath: 'inset(0 88% 0 0 round 24px)' }], { duration: 420, easing: 'cubic-bezier(.55,0,.8,.3)', fill: 'forwards' });
-      setTimeout(function () { out.remove(); }, 440);
-      if (i >= CARDS.length) { at(260, function () { el.classList.add('end'); }); return; }
-      var n = mkCard(CARDS[i]); cur = n;
-      n.animate([{ transform: 'translateX(26%)', clipPath: 'inset(0 0 0 88% round 24px)' }, { offset: .7, transform: 'translateX(-1.5%)', clipPath: 'inset(0 0 0 0 round 24px)' }, { transform: 'none', clipPath: 'inset(0 0 0 0 round 24px)' }], { duration: 560, delay: 140, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' });
-      at(420, function () { n.classList.add('show'); });
-      at(1150, next);
+  raf = requestAnimationFrame(frame);
+  var mkCard = function (k) { var c = document.createElement('div'); c.className = 'in-card'; c.innerHTML = '<img src="intro/' + k + '.jpg" alt="">'; c.style.width = CW + 'px'; c.style.height = CH + 'px'; wrap.insertBefore(c, end); return c; };
+  var P = function (x, y, s) { return 'translate(' + x + 'px,' + y + 'px)' + (s ? ' scale(' + s + ')' : ''); };
+  // hero: comes in from the right edge, growing out of the strip into the big card
+  at(RUSH + 180, function () {
+    var hero = mkCard(CARDS[0]);
+    hero.style.transformOrigin = '0 50%';
+    hero.animate([{ transform: P(W - 40, CYT + CH * 0.18, 0.62) }, { offset: .78, transform: P(CX - 3, CYT, 1.004) }, { transform: P(CX, CYT, 1) }], { duration: 640, easing: 'cubic-bezier(.2,.75,.25,1)', fill: 'forwards' });
+    var cur = hero;
+    // then the next cards: in from the right over the current one, a beat, out to the left
+    var seq = function (i, startMs) {
+      at(startMs, function () {
+        var c = mkCard(CARDS[i]), prev = cur; cur = c;
+        c.animate([{ transform: P(W + 8, CYT) }, { transform: P(CX, CYT) }], { duration: 360, easing: 'cubic-bezier(.22,.8,.3,1)', fill: 'forwards' });
+        if (prev) setTimeout(function () { prev.remove(); }, 380);
+        at(360 + 230, function () {
+          c.animate([{ transform: P(CX, CYT) }, { transform: P(-CW - 12, CYT) }], { duration: 320, easing: 'cubic-bezier(.55,0,.8,.35)', fill: 'forwards' });
+          setTimeout(function () { c.remove(); }, 340);
+          if (i === CARDS.length - 1) at(150, function () { el.classList.add('end'); });
+        });
+      });
     };
-    at(1850, next);
+    seq(1, 1450); seq(2, 1450 + 760); seq(3, 1450 + 1520);
   });
 }
 
