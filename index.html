@@ -591,10 +591,10 @@ function runIntro(force) {
   // scene 2 — the pancake photo becomes the recipe card
   at(2600, function () {
     flowOn = false; cancelAnimationFrame(flowRaf);
-    var imgs = all('.in-track img');
+    var imgs = all('.in-track img'), dropD = innerHeight * 0.9 / (+track.dataset.sc || 1);
     el.classList.add('s2');
     // every photo drops straight down and out; nothing carries over
-    imgs.forEach(function (im) { if (!im.animate) return; var cur = im.style.transform; im.animate([{ transform: cur, opacity: +im.style.opacity || 1 }, { transform: cur + ' translateY(' + (innerHeight * 0.9).toFixed(0) + 'px)', opacity: 0 }], { duration: 520, easing: 'cubic-bezier(.5,0,.85,.35)', fill: 'forwards' }); });
+    imgs.forEach(function (im) { if (!im.animate) return; var cur = im.style.transform; im.animate([{ transform: cur, opacity: +im.style.opacity || 1 }, { transform: cur + ' translate(' + (-dropD * 0.1045).toFixed(1) + 'px,' + (dropD * 0.9945).toFixed(1) + 'px)', opacity: 0 }], { duration: 520, easing: 'cubic-bezier(.5,0,.85,.35)', fill: 'forwards' }); });
     // then the card arrives on its own
     var card = $('.in-card'); card.style.visibility = 'hidden';
     at(480, function () { card.style.visibility = ''; el.classList.add('land'); if (card.animate) card.animate([{ transform: 'translateY(28px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 560, easing: 'cubic-bezier(.2,.8,.25,1)' }); });
