@@ -281,7 +281,14 @@ select.inp{appearance:none;-webkit-appearance:none}
 .cook .body{flex:1;padding:20px 24px;display:flex;flex-direction:column;gap:18px;overflow-x:hidden;overflow-y:auto}
 .cook .stepno{font-size:13px;color:var(--sub)}
 .cook .txt{font-size:27px;line-height:1.35;letter-spacing:-0.045em}
-.cook .dots{display:flex;align-items:center;justify-content:center;gap:10px;padding:6px 20px 0;flex-wrap:wrap}
+.cook .dots{display:flex;align-items:center;justify-content:safe center;gap:10px;padding:6px 20px 0;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.cook .dots::-webkit-scrollbar{display:none}
+.cook .dots.many{gap:2px}
+.cook .dots.many .dot{min-width:16px}
+.cook .dots.lots{gap:0}
+.cook .dots.lots .dot{min-width:12px}
+.cook .dots.lots .pip{height:6px;min-width:6px}
+.cook .dot{flex-shrink:0}
 .cook .dot{height:40px;min-width:20px;border:0;background:none;padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .cook .pip{display:flex;align-items:center;justify-content:center;height:9px;min-width:9px;padding:0;border-radius:999px;background:#E4E4E4;color:#6B6B6B;font-size:13px;transition:height .45s var(--spring),padding .45s var(--spring),background-color .3s ease}
 .cook .dl{max-width:0;opacity:0;overflow:hidden;white-space:nowrap;transition:max-width .45s var(--spring),opacity .2s ease}
@@ -453,6 +460,8 @@ select.inp{appearance:none;-webkit-appearance:none}
 @keyframes inPhotoOut{to{transform:translateY(40px) scale(.85);opacity:0}}
 #intro .in-card{position:absolute;left:24px;right:24px;top:calc(68px + env(safe-area-inset-top));height:min(470px,calc(100% - 290px));background:#fff;box-shadow:inset 0 0 0 1px #E2E2E2;opacity:0;overflow:hidden;transition:background-color .55s,box-shadow .55s}
 #intro.s2 .in-card,#intro.s3 .in-card,#intro.s4 .in-card{opacity:1}
+#intro.s2:not(.land) .in-card{background:transparent;box-shadow:none;overflow:visible}
+#intro.land .in-card{transition:background-color .35s ease,box-shadow .35s ease}
 #intro.s4 .in-card{background:rgba(242,238,231,.08);box-shadow:none}
 #intro .in-photo{position:absolute;left:0;top:0;right:0;height:230px;overflow:hidden;transition:height .6s cubic-bezier(.6,0,.2,1),opacity .4s}
 #intro .in-photo img{width:100%;height:230px;object-fit:cover;display:block}
@@ -525,8 +534,8 @@ function runIntro(force) {
     '<div class="in-bars"><i><b></b></i><i><b></b></i><i><b></b></i></div><button class="in-skip" type="button">Skip</button>' +
     '<div class="in-strip"><div class="in-track">' + strip + '</div></div>' +
     '<div class="in-card"><div class="in-photo"><img src="intro/pancake.jpg" alt=""></div>' +
-      '<div class="in-body in-recipe"><span class="t"' + d(0, .35, 0) + '>Fluffy pancakes</span><span class="m"' + d(0, .42, 0) + '>20 min · 2 servings</span>' +
-        rows.map(function (r, i) { return '<div class="row"' + d(i, .5, .07) + '><span class="dot"></span><span>' + r[0] + '</span><span class="de">' + r[1] + '</span><span class="q">' + r[2] + '</span></div>'; }).join('') + '</div>' +
+      '<div class="in-body in-recipe"><span class="t"' + d(0, .9, 0) + '>Fluffy pancakes</span><span class="m"' + d(0, .97, 0) + '>20 min · 2 servings</span>' +
+        rows.map(function (r, i) { return '<div class="row"' + d(i, 1.04, .07) + '><span class="dot"></span><span>' + r[0] + '</span><span class="de">' + r[1] + '</span><span class="q">' + r[2] + '</span></div>'; }).join('') + '</div>' +
       '<div class="in-body in-shop"><span class="t"' + d(0, .3, 0) + '>shopping list</span><div class="tabs"' + d(0, .36, 0) + '><span>Aldi</span><span>Asia Markt</span></div>' +
         shop.map(function (r, i) { return '<div class="row"' + d(i, .42, .06) + '><span class="cb">' + CHECK + '</span><span class="lbl">' + r[0] + ' <span class="de">' + r[1] + '</span></span><span class="q">' + r[2] + '</span></div>'; }).join('') + '</div>' +
       '<div class="in-body in-cook"><span class="pill"' + d(0, .15, 0) + '>Step 3 of 4</span><span class="st"' + d(0, .25, 0) + '>Flip when bubbles form on top, about 2 minutes.</span></div>' +
@@ -551,24 +560,26 @@ function runIntro(force) {
   };
   $('.in-skip').addEventListener('click', finish);
   // scene 1 — filmstrip
-  requestAnimationFrame(function () { bar(0, 4200); head(0, 'Recipes from any reel or short, kept in one place.'); });
+  requestAnimationFrame(function () { bar(0, 4900); head(0, 'Recipes from any reel or short, kept in one place.'); });
   // scene 2 — the pancake photo becomes the recipe card
-  at(1900, function () {
-    var src = el.querySelector('.in-track img'), ph = $('.in-photo');
-    var imgs = all('.in-track img'), best = imgs[0], cx = innerWidth / 2, bd = 1e9;
-    imgs.forEach(function (im, i) { if (IMG[i % 6] !== 'pancake') return; var r = im.getBoundingClientRect(), dd = Math.abs(r.left + r.width / 2 - cx); if (dd < bd) { bd = dd; best = im; } });
+  at(2600, function () {
+    var ph = $('.in-photo'), imgs = all('.in-track img'), best = null, cx = innerWidth / 2, bd = 1e9;
+    imgs.forEach(function (im, i) { if (IMG[i % 6] !== 'pancake') return; var r = im.getBoundingClientRect(); if (r.right < 20 || r.left > innerWidth - 20) return; var dd = Math.abs(r.left + r.width / 2 - cx); if (dd < bd) { bd = dd; best = im; } });
+    if (!best) best = imgs[0];
     var a = best.getBoundingClientRect(); el.classList.add('s2'); var b = ph.getBoundingClientRect();
     best.style.visibility = 'hidden';
-    if (ph.animate) ph.animate([{ transform: 'translate(' + (a.left - b.left) + 'px,' + (a.top - b.top) + 'px) scale(' + (a.width / b.width) + ',' + (a.height / b.height) + ') rotate(-6deg)', transformOrigin: '0 0' }, { offset: .7, transform: 'translate(0,-6px) scale(1.01,.99)', transformOrigin: '0 0' }, { transform: 'none', transformOrigin: '0 0' }], { duration: 700, easing: 'cubic-bezier(.5,0,.2,1)' });
-    head(0, 'Ingredients come out clean, in English and German.');
+    var from = 'translate(' + (a.left - b.left) + 'px,' + (a.top - b.top) + 'px) scale(' + (a.width / b.width) + ',' + (a.height / b.height) + ') rotate(-6deg)';
+    if (ph.animate) ph.animate([{ transform: from, transformOrigin: '0 0' }, { offset: .74, transform: 'translate(0,-8px) scale(1.012,.99)', transformOrigin: '0 0' }, { offset: .88, transform: 'translate(0,2px) scale(.998,1.004)', transformOrigin: '0 0' }, { transform: 'none', transformOrigin: '0 0' }], { duration: 860, easing: 'cubic-bezier(.55,0,.2,1)' });
+    at(760, function () { el.classList.add('land'); });
+    at(700, function () { head(0, 'Ingredients come out clean, in English and German.'); });
   });
   // scene 3 — the card turns into the shopping list
-  at(4200, function () { el.classList.add('s3'); bar(1, 2400); head(1, 'One list for every recipe, sorted by the shop you go to.'); });
-  at(5200, function () { all('.in-shop .row')[0].classList.add('done'); });
-  at(5550, function () { all('.in-shop .row')[1].classList.add('done'); });
+  at(4900, function () { el.classList.add('s3'); bar(1, 2400); head(1, 'One list for every recipe, sorted by the shop you go to.'); });
+  at(5900, function () { all('.in-shop .row')[0].classList.add('done'); });
+  at(6250, function () { all('.in-shop .row')[1].classList.add('done'); });
   // scene 4 — spoon it
-  at(6600, function () { el.classList.add('s4'); bar(2, 2300); head(2, 'Step by step, big enough to read from the stove.'); });
-  at(9000, finish);
+  at(7300, function () { el.classList.add('s4'); bar(2, 2300); head(2, 'Step by step, big enough to read from the stove.'); });
+  at(9700, finish);
 }
 
 window.__introWanted = /[?&]intro=1/.test(location.search);
@@ -1269,7 +1280,7 @@ function cookHTML(fresh) {
   const i = S.cook.i;
   const dc = S.cook.dir > 0 ? ' step-next' : S.cook.dir < 0 ? ' step-prev' : '';
   const cs = S.servings || r.servings || 1, cf = cs / (r.servings || 1), cmark = !!r.stepsTok && cs !== r.servings;
-  const dots = steps.length > 1 ? '<div class="dots" role="tablist" aria-label="Steps">' + steps.map((_, k) => '<button class="dot' + (k === i ? ' on' : '') + '" role="tab" aria-selected="' + (k === i) + '" aria-label="Step ' + (k + 1) + '" data-act="cook-go" data-i="' + k + '"><span class="pip"><span class="dl">Step ' + (k + 1) + '</span></span></button>').join('') + '</div>' : '';
+  const dots = steps.length > 1 ? '<div class="dots' + (steps.length > 14 ? ' many lots' : steps.length > 7 ? ' many' : '') + '" role="tablist" aria-label="Steps">' + steps.map((_, k) => '<button class="dot' + (k === i ? ' on' : '') + '" role="tab" aria-selected="' + (k === i) + '" aria-label="Step ' + (k + 1) + '" data-act="cook-go" data-i="' + k + '"><span class="pip"><span class="dl">Step ' + (k + 1) + '</span></span></button>').join('') + '</div>' : '';
   return '<div class="cook' + (fresh ? ' in' : '') + '" role="dialog" aria-label="Cooking mode"><div class="topbar" style="padding:16px 20px 0"><button class="iconbtn" data-act="cook-close" aria-label="Close" style="justify-content:flex-start">' + I.close + '</button><div class="eyebrow">' + esc(r.name) + '</div></div>' +
     dots +
     '<div class="body">' + (steps.length
