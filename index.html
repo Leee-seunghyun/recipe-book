@@ -449,9 +449,59 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro .in-bars i.full{opacity:1;background:rgba(58,42,33,.15)}
 #intro.s4 .in-bars i.full{background:rgba(242,238,231,.25)}
 #intro .in-skip{position:absolute;right:12px;top:calc(26px + env(safe-area-inset-top));height:40px;padding:0 10px;border:0;background:none;color:inherit;opacity:.6;font:inherit;font-size:14px}
-#intro .in-strip{position:absolute;left:0;right:0;top:0;height:0;overflow:hidden;pointer-events:none}
-#intro .in-track{position:absolute;left:0;top:0;transform-origin:0 0}
-#intro .in-track img{position:absolute;left:0;top:0;width:164px;height:205px;object-fit:cover;display:block;will-change:transform,opacity;opacity:0}
+#intro .in-pov{position:absolute;inset:0;overflow:hidden;background:#1E1814;z-index:3;transition:opacity .35s ease}
+#intro .in-pov.gone{opacity:0;pointer-events:none}
+#intro .pv-cam{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+#intro .pv-photo{position:absolute;left:0;top:0;display:block;max-width:none}
+#intro .pv-scr{position:absolute;left:0;top:0;width:375px;height:768px;transform-origin:0 0;border-radius:40px;overflow:hidden;background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Figtree,sans-serif;-webkit-font-smoothing:antialiased}
+#intro .pv-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;animation:pvKen 6s ease-out forwards}
+@keyframes pvKen{from{transform:scale(1.02)}to{transform:scale(1.12) translate(-8px,6px)}}
+#intro .pv-shade{position:absolute;left:0;right:0;top:492px;height:220px;background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(0,0,0,.6))}
+#intro .pv-scr svg{display:block;overflow:visible}
+#intro .pv-scr .sh{filter:drop-shadow(0 1px 3px rgba(0,0,0,.35))}
+#intro .pv-time{position:absolute;left:28px;top:16px;font-size:15px;font-weight:600}
+#intro .pv-title{position:absolute;left:18px;top:54px;font-size:23px;font-weight:700;letter-spacing:-.3px}
+#intro .pv-cam-ic{position:absolute;right:18px;top:56px}
+#intro .pv-prog{position:absolute;left:0;right:0;top:0;height:2px;background:rgba(255,255,255,.25)}
+#intro .pv-prog i{position:absolute;left:0;top:0;bottom:0;width:100%;background:#fff;transform-origin:left;transform:scaleX(.18);animation:pvProg 5s linear forwards}
+@keyframes pvProg{to{transform:scaleX(.62)}}
+#intro .pv-rail{position:absolute;right:12px;top:384px;width:44px;display:flex;flex-direction:column;align-items:center;gap:16px;font-size:12.5px;font-weight:600}
+#intro .pv-rail span{display:flex;flex-direction:column;align-items:center;gap:4px}
+#intro .pv-rail .aud{width:28px;height:28px;border-radius:7px;border:2px solid #fff;overflow:hidden}
+#intro .pv-rail .aud img{width:100%;height:100%;object-fit:cover}
+#intro .pv-share{position:relative}
+#intro .pv-tap{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;background:rgba(255,255,255,.32);transform:scale(.3);opacity:0}
+#intro .pv-tap.go{animation:pvTap .45s ease-out}
+@keyframes pvTap{0%{transform:scale(.3);opacity:0}30%{opacity:1}100%{transform:scale(1.15);opacity:0}}
+#intro .pv-info{position:absolute;left:16px;right:70px;top:586px}
+#intro .pv-user{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600}
+#intro .pv-user i{width:32px;height:32px;border-radius:50%;background:#F2EEE7;border:1.2px solid #fff;flex-shrink:0}
+#intro .pv-user b{font-weight:600;font-size:13px;border:1px solid rgba(255,255,255,.9);border-radius:8px;padding:5px 11px;margin-left:2px}
+#intro .pv-cap{margin:10px 0 0;font-size:14px;line-height:19px}
+#intro .pv-cap em{font-style:normal;opacity:.75}
+#intro .pv-aud{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:13px}
+#intro .pv-tabs{position:absolute;left:0;right:0;bottom:0;height:56px;background:#000;display:flex;justify-content:space-around;align-items:center;padding:0 10px 4px}
+#intro .pv-tabs .me{width:26px;height:26px;border-radius:50%;overflow:hidden}
+#intro .pv-tabs .me img{width:100%;height:100%;object-fit:cover}
+#intro .pv-dim{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .3s}
+#intro .pv-scr.sheet .pv-dim{opacity:1}
+#intro .pv-sheet{position:absolute;left:0;right:0;bottom:0;height:388px;background:#262626;border-radius:18px 18px 0 0;transform:translateY(100%);transition:transform .42s cubic-bezier(.2,.85,.25,1)}
+#intro .pv-scr.sheet .pv-sheet{transform:none}
+#intro .pv-handle{position:absolute;left:50%;top:8px;width:37px;height:4px;margin-left:-18px;border-radius:2px;background:rgba(255,255,255,.35)}
+#intro .pv-search{position:absolute;left:16px;right:16px;top:26px;height:36px;border-radius:10px;background:#3C3C3C;display:flex;align-items:center;gap:8px;padding:0 12px;color:#A8A8A8;font-size:15px}
+#intro .pv-ppl{position:absolute;left:22px;right:22px;top:80px;display:grid;grid-template-columns:repeat(4,1fr);row-gap:16px;text-align:center;font-size:12px}
+#intro .pv-ppl i{display:block;width:60px;height:60px;border-radius:50%;margin:0 auto 7px}
+#intro .pv-acts{position:absolute;left:22px;right:22px;top:281px;border-top:1px solid rgba(255,255,255,.12);padding-top:15px;display:grid;grid-template-columns:repeat(4,1fr);text-align:center;font-size:12px}
+#intro .pv-acts span{display:flex;flex-direction:column;align-items:center;gap:7px;position:relative}
+#intro .pv-acts u{width:52px;height:52px;border-radius:50%;background:#3C3C3C;display:flex;align-items:center;justify-content:center;transition:background-color .2s,transform .2s}
+#intro .pv-acts .on u{background:#5A5A5A;transform:scale(.92)}
+#intro .pv-toast{position:absolute;left:50%;top:324px;transform:translate(-50%,10px) scale(.9);opacity:0;display:flex;align-items:center;gap:8px;height:40px;padding:0 18px 0 14px;border-radius:20px;background:#1C1C1C;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .25s,transform .4s cubic-bezier(.2,.9,.3,1.2)}
+#intro .pv-scr.copied .pv-toast{opacity:1;transform:translate(-50%,0)}
+#intro.pov .in-bars,#intro.pov .in-skip{color:#F2EEE7}
+#intro.pov .in-bars i.on{background:rgba(242,238,231,.3)}
+#intro.pov .in-head,#intro.pov .in-sub{opacity:0}
+#intro .in-head,#intro .in-sub{transition:opacity .3s}
+#intro .in-bars,#intro .in-skip{z-index:5}
 #intro .in-card{position:absolute;left:24px;right:24px;top:calc(68px + env(safe-area-inset-top));height:min(470px,calc(100% - 290px));background:#fff;box-shadow:inset 0 0 0 1px #E2E2E2;opacity:0;overflow:hidden;transition:background-color .55s,box-shadow .55s}
 #intro.s2 .in-card,#intro.s3 .in-card,#intro.s4 .in-card{opacity:1}
 #intro.s2:not(.land) .in-card{background:transparent;box-shadow:none;overflow:visible}
@@ -517,7 +567,6 @@ function runIntro(force) {
   var seen = false; try { seen = localStorage.getItem('loeffel_intro_v1') === '1'; } catch (e) {}
   if (seen && !force) return;
   var IMG = ['salad', 'pasta', 'pancake', 'pie', 'gimbap', 'fries'];
-  var strip = IMG.concat(IMG).map(function (k) { return '<img src="intro/' + k + '.jpg" alt="">'; }).join('');
   var rows = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', 'to serve']];
   var shop = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', '1 bottle'], ['Blueberries', 'Heidelbeeren', '125 g']];
   var d = function (i, base, step) { return ' style="animation-delay:' + (base + i * step).toFixed(2) + 's"'; };
@@ -526,7 +575,6 @@ function runIntro(force) {
   var el = document.createElement('div'); el.id = 'intro'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Welcome to löffel');
   el.innerHTML = '<div class="in-wrap">' +
     '<div class="in-bars"><i><b></b></i><i><b></b></i><i><b></b></i></div><button class="in-skip" type="button">Skip</button>' +
-    '<div class="in-strip"><div class="in-track">' + strip + '</div></div>' +
     '<div class="in-card"><div class="in-photo"><img src="intro/pancake.jpg" alt=""></div>' +
       '<div class="in-body in-recipe"><span class="t"' + d(0, .9, 0) + '>Fluffy pancakes</span><span class="m"' + d(0, .97, 0) + '>20 min · 2 servings</span>' +
         rows.map(function (r, i) { return '<div class="row"' + d(i, 1.04, .07) + '><span class="dot"></span><span>' + r[0] + '</span><span class="de">' + r[1] + '</span><span class="q">' + r[2] + '</span></div>'; }).join('') + '</div>' +
@@ -553,61 +601,83 @@ function runIntro(force) {
     el.classList.add('out'); setTimeout(function () { el.remove(); }, 800);
   };
   $('.in-skip').addEventListener('click', finish);
-  // scene 1 — filmstrip: one direction, rhythmic surges, staggered inertia
-  var track = $('.in-track'), tImgs = [].slice.call(all('.in-track img')), flowRaf = 0, flowOn = true;
-  (function placeStrip() {
-    var wr = el.querySelector('.in-wrap').getBoundingClientRect(), hd = $('.in-head').getBoundingClientRect();
-    var top = 78, bottom = hd.top - wr.top - 28, need = 205 + 24 + 44, sc = Math.min(1, (bottom - top) / need);
-    var y = top + Math.max(0, (bottom - top) - need * sc) / 2 + 30 * sc;
-    track.style.transform = 'translate(0,' + y.toFixed(1) + 'px) rotate(-6deg) scale(' + sc.toFixed(3) + ')';
-    track.dataset.sc = sc;
-    $('.in-strip').style.height = Math.max(0, hd.top - wr.top - 20).toFixed(0) + 'px';
-  })();
-  var PITCH = 176, LAG = 0.055, N = tImgs.length, L = N * PITCH, TPIV = 2.6, PI2 = Math.PI * 2;
-  var VMIN = 34, VMAX = 230, T = 1.25, ENT = 470, TAU = 0.42;
-  // displacement of the lead card: a glide-in that settles, then soft surges and easings
-  var D = function (t) { if (t <= 0) return 0; return ENT * (1 - Math.exp(-t / TAU)) + VMIN * t + (VMAX - VMIN) * (t / 2 - T / (2 * PI2) * Math.sin(PI2 * t / T)); };
-  var V = function (t) { if (t <= 0) return 0; return ENT / TAU * Math.exp(-t / TAU) + VMIN + (VMAX - VMIN) * (0.5 - 0.5 * Math.cos(PI2 * t / T)); };
-  var stageW = el.querySelector('.in-wrap').clientWidth / (+track.dataset.sc || 1);
-  var VAVG = (VMIN + VMAX) / 2, BASE = PITCH - VAVG * LAG;
-  // start offset chosen so the pancake (index 2) is centred when it lifts off
-  var PI = IMG.indexOf('pancake');
-  var X0 = stageW / 2 - 82 - (PI * BASE - D(TPIV - PI * LAG));
-  var tStart = performance.now();
-  var flow = function (now) {
-    if (!flowOn) return;
-    var t = (now - tStart) / 1000;
-    for (var i = 0; i < N; i++) {
-      var ti = t - i * LAG, x = X0 + i * BASE - D(ti);
-      while (x < -260) x += L;
-      var v = V(ti), lean = -Math.min(1.6, v / 420);
-      var o = ti <= 0 ? 0 : Math.min(1, ti / 0.25);
-      tImgs[i].style.transform = 'translate(' + x.toFixed(2) + 'px,' + (i % 2 ? 24 : 0) + 'px) rotate(' + lean.toFixed(2) + 'deg)';
-      tImgs[i].style.opacity = o.toFixed(3);
-    }
-    flowRaf = requestAnimationFrame(flow);
+  // scene 1 — POV: watching a recipe reel, share, copy link
+  var SV = function (d, o) { o = o || {}; return '<svg width="' + (o.s || 28) + '" height="' + (o.s || 28) + '" viewBox="0 0 24 24" fill="' + (o.fill || 'none') + '" stroke="' + (o.fill ? 'none' : '#fff') + '" stroke-width="' + (o.w || 1.9) + '" stroke-linecap="round" stroke-linejoin="round"' + (o.cls ? ' class="' + o.cls + '"' : '') + '>' + d + '</svg>'; };
+  var IC = {
+    heart: '<path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0 1 12 6.6a4.6 4.6 0 0 1 8 2.9c0 6.1-8 11-8 11z"/>',
+    comment: '<path d="M20.5 11.6a8.5 8.5 0 1 1-3.1-6.6 8.5 8.5 0 0 1 3.1 6.6zM20.5 20.5l-2.6-2.6"/>',
+    send: '<path d="M21.5 2.8 10.4 13.9M21.5 2.8l-6.8 18.4-4.3-7.3-7.4-4.2z"/>',
+    more: '<circle cx="5.5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="18.5" cy="12" r="1.4"/>',
+    camera: '<rect x="3" y="6.5" width="18" height="13.5" rx="3.5"/><circle cx="12" cy="13.2" r="3.7"/><path d="M8.5 6.5 10 4h4l1.5 2.5"/>',
+    note: '<path d="M9 18V5.5l11-2V16"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="17.5" cy="16" r="2.5"/>',
+    home: '<path d="M3.5 10.5 12 3.5l8.5 7V20h-5.5v-6h-6v6H3.5z"/>',
+    search: '<circle cx="10.8" cy="10.8" r="7.2"/><path d="M16.2 16.2 21 21"/>',
+    plus: '<rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M12 8v8M8 12h8"/>',
+    reels: '<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M3 8.3h18M9.2 3l2.6 5.3M15.2 3l2.6 5.3M10 11.5v6l5-3z"/>',
+    link: '<path d="M10 14a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.2 1.2M14 10a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.2-1.2"/>',
+    story: '<circle cx="12" cy="12" r="8.5"/><path d="M12 8v8M8 12h8"/>',
+    out: '<path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 13v6.5h14V13"/>',
+    dl: '<path d="M12 3v12M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/>'
   };
-  flowRaf = requestAnimationFrame(flow);
-  requestAnimationFrame(function () { bar(0, 4900); head(0, 'Recipes from any reel or short, kept in one place.'); });
+  var ppl = [['mina.k', '#D6BEA0'], ['jonas_cooks', '#B4C8BE'], ['lea', '#D2B4BE'], ['sam.eats', '#BEBED7'], ['hana', '#D6BEA0'], ['theo', '#B4C8BE'], ['yuna', '#D2B4BE'], ['max', '#BEBED7']];
+  var scrHTML = '<div class="pv-scr"><img class="pv-vid" src="intro/pancake.jpg" alt=""><div class="pv-shade"></div><div class="pv-prog"><i></i></div>' +
+    '<span class="pv-time">9:41</span><span class="pv-title sh">Reels</span><span class="pv-cam-ic">' + SV(IC.camera, { s: 26, cls: 'sh' }) + '</span>' +
+    '<div class="pv-rail"><span>' + SV(IC.heart, { cls: 'sh' }) + '2,418</span><span>' + SV(IC.comment, { cls: 'sh' }) + '86</span><span class="pv-share">' + SV(IC.send, { cls: 'sh' }) + '312<i class="pv-tap"></i></span>' + SV(IC.more, { fill: '#fff', cls: 'sh' }) + '<span class="aud"><img src="intro/pancake.jpg" alt=""></span></div>' +
+    '<div class="pv-info"><div class="pv-user"><i></i>sunday.kitchen<b>Follow</b></div><p class="pv-cap">Fluffy pancakes for slow Sundays 200 g flour, 300 ml milk, 2 eggs… <em>more</em></p><div class="pv-aud">' + SV(IC.note, { s: 15, w: 2 }) + 'sunday.kitchen · Original audio</div></div>' +
+    '<div class="pv-tabs">' + SV(IC.home, { s: 26 }) + SV(IC.search, { s: 26 }) + SV(IC.plus, { s: 26 }) + SV(IC.reels, { s: 26, w: 2.3 }) + '<span class="me"><img src="intro/pasta.jpg" alt=""></span></div>' +
+    '<div class="pv-dim"></div><div class="pv-toast">' + SV(IC.link, { s: 18 }) + 'Link copied</div>' +
+    '<div class="pv-sheet"><i class="pv-handle"></i><div class="pv-search">' + SV(IC.search, { s: 18 }).replace('stroke="#fff"', 'stroke="#A8A8A8"') + 'Search</div>' +
+      '<div class="pv-ppl">' + ppl.map(function (p) { return '<span><i style="background:' + p[1] + '"></i>' + p[0] + '</span>'; }).join('') + '</div>' +
+      '<div class="pv-acts"><span><u>' + SV(IC.story, { s: 26 }) + '</u>Add to story</span><span class="cp"><u>' + SV(IC.link, { s: 26 }) + '</u>Copy link<i class="pv-tap"></i></span><span><u>' + SV(IC.out, { s: 26 }) + '</u>Share</span><span><u>' + SV(IC.dl, { s: 26 }) + '</u>Download</span></div></div></div>';
+  var pov = document.createElement('div'); pov.className = 'in-pov';
+  pov.innerHTML = '<div class="pv-cam"><img class="pv-photo" src="intro/pov.jpg" alt="">' + scrHTML + '</div>';
+  el.querySelector('.in-wrap').insertBefore(pov, el.querySelector('.in-wrap').firstChild);
+  el.classList.add('pov');
+  var cam = pov.querySelector('.pv-cam'), photo = pov.querySelector('.pv-photo'), scr = pov.querySelector('.pv-scr');
+  var PW = 1632, PH = 2912, Q = [[543, 932], [1056, 916], [1088, 1963], [580, 1976]];
+  var VW = pov.clientWidth, VH = pov.clientHeight, ps = Math.max(VW / PW, VH / PH), pox = (VW - PW * ps) / 2, poy = (VH - PH * ps) / 2;
+  photo.style.width = PW * ps + 'px'; photo.style.height = PH * ps + 'px'; photo.style.left = pox + 'px'; photo.style.top = poy + 'px';
+  var q = Q.map(function (p) { return [pox + p[0] * ps, poy + p[1] * ps]; });
+  // map the 375x768 screen onto the phone's screen quad (projective)
+  (function () {
+    var x0 = q[0][0], y0 = q[0][1], x1 = q[1][0], y1 = q[1][1], x2 = q[2][0], y2 = q[2][1], x3 = q[3][0], y3 = q[3][1];
+    var dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3, den = dx1 * dy2 - dx2 * dy1;
+    var g = (dx3 * dy2 - dx2 * dy3) / den, h = (dx1 * dy3 - dx3 * dy1) / den;
+    var a = x1 - x0 + g * x1, b = x3 - x0 + h * x3, d = y1 - y0 + g * y1, e = y3 - y0 + h * y3, w = 375, H2 = 768;
+    scr.style.transform = 'matrix3d(' + [a / w, d / w, 0, g / w, b / H2, e / H2, 0, h / H2, 0, 0, 1, 0, x0, y0, 0, 1].join(',') + ')';
+  })();
+  var cx = (q[0][0] + q[1][0] + q[2][0] + q[3][0]) / 4, cy = (q[0][1] + q[1][1] + q[2][1] + q[3][1]) / 4;
+  var tilt = Math.atan2(q[1][1] - q[0][1], q[1][0] - q[0][0]) * 180 / Math.PI, sh = Math.hypot(q[3][0] - q[0][0], q[3][1] - q[0][1]);
+  var camT = function (k, r, tx, ty) { var rad = r * Math.PI / 180, c = Math.cos(rad), s = Math.sin(rad); var X = tx - (c * k * cx - s * k * cy), Y = ty - (s * k * cx + c * k * cy); return 'translate(' + X.toFixed(2) + 'px,' + Y.toFixed(2) + 'px) rotate(' + r.toFixed(3) + 'deg) scale(' + k.toFixed(4) + ')'; };
+  var K1 = 1.75, K2 = (VH * 1.06) / sh, TY = VH * 0.47;
+  var A0 = camT(1, 0, cx, cy), A1 = camT(1.045, 0, cx, cy - 4);
+  cam.style.transform = A0;
+  if (cam.animate) cam.animate([{ transform: A0 }, { transform: A1 }], { duration: 1700, easing: 'cubic-bezier(.3,0,.4,1)', fill: 'forwards' });
+  var tap = function (sel) { var t = scr.querySelector(sel); t.classList.remove('go'); void t.offsetWidth; t.classList.add('go'); };
+  at(1350, function () { tap('.pv-share .pv-tap'); });
+  at(1650, function () {
+    scr.classList.add('sheet');
+    // push in and level the camera so the phone sits square to the screen
+    if (cam.animate) cam.animate([{ transform: A1 }, { transform: camT(K1, -tilt, VW / 2, TY) }], { duration: 900, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'forwards' });
+  });
+  at(2750, function () { tap('.cp .pv-tap'); scr.querySelector('.cp').classList.add('on'); });
+  at(2950, function () { scr.classList.add('copied'); scr.querySelector('.cp').classList.remove('on'); });
+  at(3650, function () { if (cam.animate) cam.animate([{ transform: camT(K1, -tilt, VW / 2, TY) }, { transform: camT(K2, -tilt, VW / 2, VH / 2) }], { duration: 650, easing: 'cubic-bezier(.6,0,.85,.4)', fill: 'forwards' }); });
+  requestAnimationFrame(function () { bar(0, 6400); });
   // scene 2 — the pancake photo becomes the recipe card
-  at(2600, function () {
-    flowOn = false; cancelAnimationFrame(flowRaf);
-    var imgs = all('.in-track img'), dropD = innerHeight * 0.9 / (+track.dataset.sc || 1);
-    el.classList.add('s2');
-    // every photo drops straight down and out; nothing carries over
-    imgs.forEach(function (im) { if (!im.animate) return; var cur = im.style.transform; im.animate([{ transform: cur, opacity: +im.style.opacity || 1 }, { transform: cur + ' translate(' + (-dropD * 0.1045).toFixed(1) + 'px,' + (dropD * 0.9945).toFixed(1) + 'px)', opacity: 0 }], { duration: 520, easing: 'cubic-bezier(.5,0,.85,.35)', fill: 'forwards' }); });
-    // then the card arrives on its own
+  at(4300, function () {
+    el.classList.add('s2'); el.classList.remove('pov'); pov.classList.add('gone'); setTimeout(function () { pov.remove(); }, 400);
+    head(0, 'Ingredients come out clean, in English and German.');
     var card = $('.in-card'); card.style.visibility = 'hidden';
-    at(480, function () { card.style.visibility = ''; el.classList.add('land'); if (card.animate) card.animate([{ transform: 'translateY(28px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 560, easing: 'cubic-bezier(.2,.8,.25,1)' }); });
-    at(700, function () { head(0, 'Ingredients come out clean, in English and German.'); });
+    at(160, function () { card.style.visibility = ''; el.classList.add('land'); if (card.animate) card.animate([{ transform: 'translateY(28px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 560, easing: 'cubic-bezier(.2,.8,.25,1)' }); });
   });
   // scene 3 — the card turns into the shopping list
-  at(4900, function () { el.classList.add('s3'); bar(1, 2400); head(1, 'One list for every recipe, sorted by the shop you go to.'); });
-  at(5900, function () { all('.in-shop .row')[0].classList.add('done'); });
-  at(6250, function () { all('.in-shop .row')[1].classList.add('done'); });
+  at(6600, function () { el.classList.add('s3'); bar(1, 2400); head(1, 'One list for every recipe, sorted by the shop you go to.'); });
+  at(7600, function () { all('.in-shop .row')[0].classList.add('done'); });
+  at(7950, function () { all('.in-shop .row')[1].classList.add('done'); });
   // scene 4 — spoon it
-  at(7300, function () { el.classList.add('s4'); bar(2, 2300); head(2, 'Step by step, big enough to read from the stove.'); });
-  at(9700, finish);
+  at(9000, function () { el.classList.add('s4'); bar(2, 2300); head(2, 'Step by step, big enough to read from the stove.'); });
+  at(11400, finish);
 }
 
 window.__introWanted = /[?&]intro=1/.test(location.search);
