@@ -495,7 +495,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro .pv-acts span{display:flex;flex-direction:column;align-items:center;gap:7px;position:relative}
 #intro .pv-acts u{width:52px;height:52px;border-radius:50%;background:#3C3C3C;display:flex;align-items:center;justify-content:center;transition:background-color .2s,transform .2s}
 #intro .pv-acts .on u{background:#5A5A5A;transform:scale(.92)}
-#intro .pv-toast{position:absolute;left:50%;top:324px;transform:translate(-50%,10px) scale(.9);opacity:0;display:flex;align-items:center;gap:8px;height:40px;padding:0 18px 0 14px;border-radius:20px;background:#1C1C1C;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .25s,transform .4s cubic-bezier(.2,.9,.3,1.2)}
+#intro .pv-toast{position:absolute;left:50%;top:300px;transform:translate(-50%,10px) scale(.9);opacity:0;display:flex;align-items:center;gap:8px;height:40px;padding:0 18px 0 14px;border-radius:20px;background:#1C1C1C;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .25s,transform .4s cubic-bezier(.2,.9,.3,1.2)}
 #intro .pv-scr.copied .pv-toast{opacity:1;transform:translate(-50%,0)}
 #intro.pov .in-bars,#intro.pov .in-skip{color:#F2EEE7}
 #intro.pov .in-bars i.on{background:rgba(242,238,231,.3)}
@@ -634,7 +634,7 @@ function runIntro(force) {
   el.querySelector('.in-wrap').insertBefore(pov, el.querySelector('.in-wrap').firstChild);
   el.classList.add('pov');
   var cam = pov.querySelector('.pv-cam'), photo = pov.querySelector('.pv-photo'), scr = pov.querySelector('.pv-scr');
-  var PW = 1632, PH = 2912, Q = [[543, 932], [1056, 916], [1088, 1963], [580, 1976]];
+  var PW = 1632, PH = 2912, Q = [[537, 925], [1062, 909], [1095, 1974], [574, 1987]];
   var VW = pov.clientWidth, VH = pov.clientHeight, ps = Math.max(VW / PW, VH / PH), pox = (VW - PW * ps) / 2, poy = (VH - PH * ps) / 2;
   photo.style.width = PW * ps + 'px'; photo.style.height = PH * ps + 'px'; photo.style.left = pox + 'px'; photo.style.top = poy + 'px';
   var q = Q.map(function (p) { return [pox + p[0] * ps, poy + p[1] * ps]; });
