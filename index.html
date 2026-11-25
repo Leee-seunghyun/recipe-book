@@ -484,9 +484,9 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro .pv-tabs .me{width:26px;height:26px;border-radius:50%;overflow:hidden}
 #intro .pv-tabs .me img{width:100%;height:100%;object-fit:cover}
 #intro .pv-dim{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .3s}
-#intro .pv-scr.sheet .pv-dim{opacity:1}
+#intro .pv-scr.pv-open .pv-dim{opacity:1}
 #intro .pv-sheet{position:absolute;left:0;right:0;bottom:0;height:388px;background:#262626;border-radius:18px 18px 0 0;transform:translateY(100%);transition:transform .42s cubic-bezier(.2,.85,.25,1)}
-#intro .pv-scr.sheet .pv-sheet{transform:none}
+#intro .pv-scr.pv-open .pv-sheet{transform:none}
 #intro .pv-handle{position:absolute;left:50%;top:8px;width:37px;height:4px;margin-left:-18px;border-radius:2px;background:rgba(255,255,255,.35)}
 #intro .pv-search{position:absolute;left:16px;right:16px;top:26px;height:36px;border-radius:10px;background:#3C3C3C;display:flex;align-items:center;gap:8px;padding:0 12px;color:#A8A8A8;font-size:15px}
 #intro .pv-ppl{position:absolute;left:22px;right:22px;top:80px;display:grid;grid-template-columns:repeat(4,1fr);row-gap:16px;text-align:center;font-size:12px}
@@ -496,7 +496,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro .pv-acts u{width:52px;height:52px;border-radius:50%;background:#3C3C3C;display:flex;align-items:center;justify-content:center;transition:background-color .2s,transform .2s}
 #intro .pv-acts .on u{background:#5A5A5A;transform:scale(.92)}
 #intro .pv-toast{position:absolute;left:50%;top:300px;transform:translate(-50%,10px) scale(.9);opacity:0;display:flex;align-items:center;gap:8px;height:40px;padding:0 18px 0 14px;border-radius:20px;background:#1C1C1C;font-size:14px;font-weight:500;white-space:nowrap;transition:opacity .25s,transform .4s cubic-bezier(.2,.9,.3,1.2)}
-#intro .pv-scr.copied .pv-toast{opacity:1;transform:translate(-50%,0)}
+#intro .pv-scr.pv-copied .pv-toast{opacity:1;transform:translate(-50%,0)}
 #intro.pov .in-bars,#intro.pov .in-skip{color:#F2EEE7}
 #intro.pov .in-bars i.on{background:rgba(242,238,231,.3)}
 #intro.pov .in-head,#intro.pov .in-sub{opacity:0}
@@ -656,12 +656,12 @@ function runIntro(force) {
   var tap = function (sel) { var t = scr.querySelector(sel); t.classList.remove('go'); void t.offsetWidth; t.classList.add('go'); };
   at(1350, function () { tap('.pv-share .pv-tap'); });
   at(1650, function () {
-    scr.classList.add('sheet');
+    scr.classList.add('pv-open');
     // push in and level the camera so the phone sits square to the screen
     if (cam.animate) cam.animate([{ transform: A1 }, { transform: camT(K1, -tilt, VW / 2, TY) }], { duration: 900, easing: 'cubic-bezier(.45,0,.2,1)', fill: 'forwards' });
   });
   at(2750, function () { tap('.cp .pv-tap'); scr.querySelector('.cp').classList.add('on'); });
-  at(2950, function () { scr.classList.add('copied'); scr.querySelector('.cp').classList.remove('on'); });
+  at(2950, function () { scr.classList.add('pv-copied'); scr.querySelector('.cp').classList.remove('on'); });
   at(3650, function () { if (cam.animate) cam.animate([{ transform: camT(K1, -tilt, VW / 2, TY) }, { transform: camT(K2, -tilt, VW / 2, VH / 2) }], { duration: 650, easing: 'cubic-bezier(.6,0,.85,.4)', fill: 'forwards' }); });
   requestAnimationFrame(function () { bar(0, 6400); });
   // scene 2 — the pancake photo becomes the recipe card
