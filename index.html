@@ -699,7 +699,7 @@ function runIntro(force) {
     fl.animate([{ transform: T(6, k0 * 0.86, 28), opacity: 0, boxShadow: '0 2px 6px rgba(0,0,0,.2)' }, { offset: .55, transform: T(-30, k0 * 1.42, -6), opacity: 1, boxShadow: '0 22px 44px rgba(0,0,0,.42)' }, { transform: T(-24, k0 * 1.34, 0), opacity: 1, boxShadow: '0 18px 38px rgba(0,0,0,.38)' }], { duration: 620, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' });
     fs.style.transform = 'translate(' + (x - 75).toFixed(1) + 'px,' + (y - 6).toFixed(1) + 'px)';
     fs.animate([{ opacity: 0, transform: fs.style.transform + ' scale(.5)' }, { opacity: .55, transform: fs.style.transform + ' scale(' + (k0 * 1.1).toFixed(2) + ')' }], { duration: 620, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'forwards' });
-    at(800, function () {
+    at(620, function () {
       fl.animate([{ transform: T(-24, k0 * 1.34, 0), opacity: 1 }, { transform: T(-80, k0 * 1.1, 0), opacity: 0 }], { duration: 380, easing: 'cubic-bezier(.5,0,.8,.4)', fill: 'forwards' });
       fs.animate([{ opacity: .55 }, { opacity: 0 }], { duration: 300, fill: 'forwards' });
       setTimeout(function () { fl.remove(); fs.remove(); }, 420);
