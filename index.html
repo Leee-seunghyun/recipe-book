@@ -771,6 +771,14 @@ window.__splash = function () {
   sp.dataset.out = '1';
   var wait = Math.max(0, 1150 - (performance.now() - window.__splashT0));
   setTimeout(function () {
+    // first run: put the intro right under the splash and fade the splash into it, so the sign-in screen never flashes
+    var seen = false; try { seen = localStorage.getItem('loeffel_intro_v1') === '1'; } catch (e) {}
+    if (window.__introWanted || (document.querySelector('#app .login') && !seen)) {
+      runIntro(window.__introWanted || !seen);
+      sp.style.transition = 'opacity .4s ease'; sp.style.opacity = '0';
+      setTimeout(function () { sp.remove(); }, 420);
+      return;
+    }
     var sym = sp.querySelector('.sp-sym'), target = document.querySelector('#app .logo svg');
     var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (target && sym && !reduce && sym.animate) {
@@ -780,10 +788,10 @@ window.__splash = function () {
       sym.animate([{ transform: 'none' }, { offset: .18, transform: 'translateY(6px) scale(1.06,.92)' }, { offset: .78, transform: 'translate(' + dx + 'px,' + (dy - 4) + 'px) scale(' + (k * 0.96) + ',' + (k * 1.05) + ')' }, { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + k + ')' }], { duration: 720, easing: 'cubic-bezier(.6,0,.2,1)', fill: 'forwards' });
       sp.querySelector('.sp-wm').animate([{ opacity: 1 }, { opacity: 0, transform: 'translateY(10px)' }], { duration: 260, fill: 'forwards' });
       sp.animate([{ backgroundColor: 'rgba(250,250,250,1)' }, { backgroundColor: 'rgba(250,250,250,0)' }], { duration: 380, delay: 180, fill: 'forwards' });
-      setTimeout(function () { target.style.visibility = ''; sp.remove(); if (window.__introWanted || document.querySelector('#app .login')) runIntro(window.__introWanted); }, 740);
+      setTimeout(function () { target.style.visibility = ''; sp.remove(); }, 740);
     } else {
       sp.style.transition = 'opacity .35s'; sp.style.opacity = '0';
-      setTimeout(function () { sp.remove(); if (window.__introWanted || document.querySelector('#app .login')) runIntro(window.__introWanted); }, 380);
+      setTimeout(function () { sp.remove(); }, 380);
     }
   }, wait);
 };
