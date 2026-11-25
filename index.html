@@ -450,6 +450,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro.s4 .in-bars i.full{background:rgba(242,238,231,.25)}
 #intro .in-skip{position:absolute;right:12px;top:calc(26px + env(safe-area-inset-top));height:40px;padding:0 10px;border:0;background:none;color:inherit;opacity:.6;font:inherit;font-size:14px}
 #intro .in-pov{position:absolute;inset:0;overflow:hidden;background:#F2EEE7;z-index:3;transition:opacity .35s ease}
+#intro .in-frame{position:absolute;pointer-events:none;z-index:4;box-shadow:0 0 0 200vmax #F2EEE7}
 #intro .in-pov.gone{opacity:0;pointer-events:none;transition:none}
 #intro.instant .in-head,#intro.instant .in-sub,#intro.instant .in-bars i,#intro.instant .in-skip{transition:none!important}
 #intro .pv-cam{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
@@ -702,12 +703,16 @@ function runIntro(force) {
   at(3700, function () { scr.classList.add('pv-switch'); });
   // then the camera goes into the screen until the screen is the view
   at(4900, function () { var zo = { duration: 950, easing: 'cubic-bezier(.55,0,.2,1)', fill: 'forwards' };
-    if (phone.animate) { phone.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: 'ease-out', fill: 'forwards' }); island.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }); scr.animate([{ borderRadius: '40px' }, { borderRadius: '0px' }], zo); } else { phone.style.opacity = island.style.opacity = '0'; }
+    if (phone.animate) { phone.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: 'ease-out', fill: 'forwards' }); island.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }); } else { phone.style.opacity = island.style.opacity = '0'; }
     if (cam.animate) cam.animate([{ transform: camT(K1, -tilt, VW / 2, TY) }, { transform: camT(K3, -tilt, VW / 2, VH / 2) }], { duration: 950, easing: 'cubic-bezier(.55,0,.2,1)', fill: 'forwards' }); });
   requestAnimationFrame(function () { bar(0, 8200); });
   // scene 2 — the pancake photo becomes the recipe card
   at(5900, function () {
     // the phone screen and the real scene 2 line up exactly here, so swap without a visible change
+    // keep the zoomed-in screen's rounded frame over the rest of the intro
+    var rb = scr.getBoundingClientRect(), ib = el.getBoundingClientRect(), fr = document.createElement('div');
+    fr.className = 'in-frame'; fr.style.cssText = 'left:' + (rb.left - ib.left) + 'px;top:' + (rb.top - ib.top) + 'px;width:' + rb.width + 'px;height:' + rb.height + 'px;border-radius:' + (40 * rb.height / 812) + 'px';
+    el.appendChild(fr);
     el.classList.add('instant', 's2', 'land'); el.classList.remove('pov');
     heads[0].classList.add('on'); sub.textContent = 'Ingredients come out clean, in English and German.';
     requestAnimationFrame(function () { requestAnimationFrame(function () { pov.classList.add('gone'); pov.remove(); }); });
