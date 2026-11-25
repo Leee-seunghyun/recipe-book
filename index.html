@@ -591,15 +591,13 @@ function runIntro(force) {
   // scene 2 — the pancake photo becomes the recipe card
   at(2600, function () {
     flowOn = false; cancelAnimationFrame(flowRaf);
-    var ph = $('.in-photo'), imgs = all('.in-track img'), best = null, cx = innerWidth / 2, bd = 1e9;
-    imgs.forEach(function (im, i) { if (IMG[i % 6] !== 'pancake') return; var r = im.getBoundingClientRect(); if (r.right < 20 || r.left > innerWidth - 20) return; var dd = Math.abs(r.left + r.width / 2 - cx); if (dd < bd) { bd = dd; best = im; } });
-    if (!best) best = imgs[0];
-    var a = best.getBoundingClientRect(); el.classList.add('s2'); var b = ph.getBoundingClientRect();
-    best.style.visibility = 'hidden';
-    imgs.forEach(function (im) { if (im === best || !im.animate) return; var cur = im.style.transform; im.animate([{ transform: cur, opacity: +im.style.opacity || 1 }, { transform: cur + ' translateY(46px) scale(.96)', opacity: 0 }], { duration: 420, easing: 'cubic-bezier(.4,0,.8,.4)', fill: 'forwards' }); });
-    var from = 'translate(' + (a.left - b.left) + 'px,' + (a.top - b.top) + 'px) scale(' + (a.width / b.width) + ',' + (a.height / b.height) + ') rotate(-6deg)';
-    if (ph.animate) ph.animate([{ transform: from, transformOrigin: '0 0' }, { offset: .8, transform: 'translate(0,-3px) scale(1.004,.998)', transformOrigin: '0 0' }, { transform: 'none', transformOrigin: '0 0' }], { duration: 860, easing: 'cubic-bezier(.55,0,.2,1)' });
-    at(760, function () { el.classList.add('land'); });
+    var imgs = all('.in-track img');
+    el.classList.add('s2');
+    // every photo drops straight down and out; nothing carries over
+    imgs.forEach(function (im) { if (!im.animate) return; var cur = im.style.transform; im.animate([{ transform: cur, opacity: +im.style.opacity || 1 }, { transform: cur + ' translateY(' + (innerHeight * 0.9).toFixed(0) + 'px)', opacity: 0 }], { duration: 520, easing: 'cubic-bezier(.5,0,.85,.35)', fill: 'forwards' }); });
+    // then the card arrives on its own
+    var card = $('.in-card'); card.style.visibility = 'hidden';
+    at(480, function () { card.style.visibility = ''; el.classList.add('land'); if (card.animate) card.animate([{ transform: 'translateY(28px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 560, easing: 'cubic-bezier(.2,.8,.25,1)' }); });
     at(700, function () { head(0, 'Ingredients come out clean, in English and German.'); });
   });
   // scene 3 — the card turns into the shopping list
