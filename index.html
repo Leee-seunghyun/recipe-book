@@ -507,12 +507,23 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro .pv-scr.pv-switch .pv-reel{transform:translateX(-30%);filter:brightness(.55)}
 #intro .pv-scr.pv-switch .pv-app{transform:none}
 #intro .ap{position:absolute;inset:0}
-#intro .ap-card{position:absolute;left:24px;right:24px;top:calc(68px + env(safe-area-inset-top));height:min(470px,calc(100% - 290px));background:#fff;box-shadow:inset 0 0 0 1px #E2E2E2;overflow:hidden;opacity:0}
-#intro .ap-card img{display:block;width:100%;height:230px;object-fit:cover}
+#intro .ap-card{position:absolute;left:24px;right:24px;top:calc(68px + env(safe-area-inset-top));height:min(470px,calc(100% - 290px));background:#FAFAFA;box-shadow:inset 0 0 0 1px #E2E2E2;overflow:hidden;opacity:0}
 #intro .ap-body{position:absolute;left:20px;right:20px;top:250px;display:flex;flex-direction:column}
 #intro .ap-body .t{font-size:22px;font-weight:500;letter-spacing:-.9px}
 #intro .ap-body .m{font-size:12px;color:#6B6B6B;margin:4px 0 10px}
 #intro .ap-body .row{opacity:0}
+#intro .dm{position:absolute;left:0;right:auto;top:0;width:375px;display:block;transform-origin:0 0;color:#3A2A21;text-align:left}
+#intro .dm .dm-in{transition:transform 1.1s cubic-bezier(.6,0,.2,1)}
+#intro .dm.scrolled .dm-in{transform:translateY(-236px)}
+#intro .dm .hero .ph{display:block;width:100%;height:260px;object-fit:cover}
+#intro .dm .page{padding:20px 22px 0}
+#intro .dm .back,#intro .dm .watch{color:#3A2A21}
+#intro .in-recipe>.dm-in{opacity:1!important;animation:none!important}
+#intro .dm .st{opacity:0;transform:translateY(18px)}
+#intro.s2 .in-recipe .st{animation:inRise .6s cubic-bezier(.3,1.45,.5,1) forwards}
+#intro.s3 .in-recipe .st,#intro.s4 .in-recipe .st{animation:inLeave .3s cubic-bezier(.5,0,.75,0) forwards;animation-delay:0s!important}
+#intro.instant.s2:not(.s3) .in-recipe .st{animation:none;opacity:1;transform:none}
+#intro .pv-scr.pv-switch .dm .st{animation:inRise .55s cubic-bezier(.3,1.45,.5,1) forwards}
 #intro .ap-head{position:absolute;left:22px;bottom:calc(128px + env(safe-area-inset-bottom));font-size:46px;font-weight:500;line-height:50px;letter-spacing:-2.2px;opacity:0}
 #intro .ap-sub{position:absolute;left:22px;width:300px;bottom:calc(68px + env(safe-area-inset-bottom));margin:0;font-size:15px;line-height:22px;color:rgba(58,42,33,.6);opacity:0}
 #intro .pv-scr.pv-switch .ap-card{animation:apRise .6s .38s cubic-bezier(.2,.8,.25,1) forwards}
@@ -545,7 +556,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro.s2 .in-recipe>*{animation:inRise .6s cubic-bezier(.3,1.45,.5,1) forwards}
 #intro.s3 .in-recipe>*,#intro.s4 .in-recipe>*{animation:inLeave .3s cubic-bezier(.5,0,.75,0) forwards;animation-delay:0s!important}
 #intro .in-shop{left:0;right:auto;top:0;width:375px;display:block;padding:24px 22px 0;box-sizing:border-box;transform-origin:0 0}
-#intro.s3:not(.s4) .in-card{background:#FAFAFA}
+#intro.s2:not(.s4) .in-card{background:#FAFAFA}
 #intro .in-shop .check{background:none}
 #intro .in-shop .check label{cursor:default}
 #intro .cb{width:16px;height:16px;box-shadow:inset 0 0 0 1.4px #9A9A9A;position:relative;flex-shrink:0;transition:background-color .2s,box-shadow .2s}
@@ -591,14 +602,30 @@ function runIntro(force) {
   var rows = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', 'to serve']];
   var shop = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', '1 bottle']];
   var d = function (i, base, step) { return ' style="animation-delay:' + (base + i * step).toFixed(2) + 's"'; };
+  // the app's own recipe screen (same classes as the real detail view), drawn at phone width; scaled to fit where it is used
+  var detailMini = function (cls, off) {
+    var D = function (t) { return ' style="animation-delay:' + (off + t).toFixed(2) + 's"'; };
+    var ings = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', 'to serve']];
+    return '<div class="dm ' + cls + '"><div class="dm-in">' +
+      '<div class="hero st"' + D(0) + '><img class="ph" src="intro/pancake.jpg" alt="">' +
+        '<span class="back"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></span>' +
+        '<span class="back more"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></span>' +
+        '<span class="watch"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg> Watch on YouTube</span></div>' +
+      '<div class="page">' +
+        '<div class="eyebrow dtm st"' + D(.08) + '><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>20 min</div>' +
+        '<h1 class="hl md st"' + D(.14) + '>Fluffy pancakes</h1>' +
+        '<div class="tagrow st"' + D(.2) + '><span class="tagchip">Breakfast</span><span class="tagchip">Sweet</span></div>' +
+        '<div class="panel st"' + D(.26) + '><div style="flex:1"><div class="eyebrow">Servings</div><div style="font-size:13px;color:var(--sub);margin-top:2px">Original recipe</div></div><div class="stepper"><button tabindex="-1">−</button><span>2</span><button class="plus" tabindex="-1">+</button></div></div>' +
+        '<div class="sec st"' + D(.32) + '>Ingredients for 2</div>' +
+        ings.map(function (r, i) { return '<div class="ing st"' + D(.38 + i * .06) + '><div class="nm">' + r[0] + '<small>' + r[1] + '</small></div><div class="am">' + r[2] + '</div></div>'; }).join('') +
+      '</div></div></div>';
+  };
   var CHECK = '<svg viewBox="0 0 16 16" width="16" height="16"><path d="M4 8.3l2.6 2.6L12 5.5" fill="none" stroke="#F2EEE7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   var M = 'M7 26H26.4Q29 26 31.45 25.13L41.72 21.46A1.8 1.8 0 0 1 42.93 24.85L31.6 28.9Q28.6 30 25.5 32.95A11 9.5 0 0 1 7 26Z';
   var el = document.createElement('div'); el.id = 'intro'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Welcome to löffel');
   el.innerHTML = '<div class="in-wrap">' +
     '<div class="in-bars"><i><b></b></i><i><b></b></i><i><b></b></i></div><button class="in-skip" type="button">Skip</button>' +
-    '<div class="in-card"><div class="in-photo"><img src="intro/pancake.jpg" alt=""></div>' +
-      '<div class="in-body in-recipe"><span class="t"' + d(0, .9, 0) + '>Fluffy pancakes</span><span class="m"' + d(0, .97, 0) + '>20 min · 2 servings</span>' +
-        rows.map(function (r, i) { return '<div class="row"' + d(i, 1.04, .07) + '><span class="dot"></span><span>' + r[0] + '</span><span class="de">' + r[1] + '</span><span class="q">' + r[2] + '</span></div>'; }).join('') + '</div>' +
+    '<div class="in-card">' + detailMini('in-body in-recipe', .2) +
       // the app's own shopping list screen, drawn at phone width and scaled to the card
       '<div class="in-body in-shop">' +
         '<div class="topbar"' + d(0, .2, 0) + '><div class="logo"><svg width="36" height="36" viewBox="0 0 48 48" aria-hidden="true"><circle cx="17" cy="15" r="3.4" fill="currentColor"/><circle cx="31" cy="15" r="3.4" fill="currentColor"/><path transform="translate(-1.2 0)" d="' + M + '" fill="currentColor"/></svg></div></div>' +
@@ -611,7 +638,8 @@ function runIntro(force) {
     '<div class="in-head"><span>save it.</span><span>shop it.</span><span>spoon it.</span></div>' +
     '<p class="in-sub">Recipes from any reel or short, kept in one place.</p></div>';
   document.body.appendChild(el);
-  (function () { var c = el.querySelector('.in-card'), sp = el.querySelector('.in-shop'); if (c && sp) sp.style.transform = 'scale(' + (c.clientWidth / 375).toFixed(4) + ')'; })();
+  var fitCard = function (root) { var c = root.querySelector('.in-card, .ap-card'); if (!c) return; var k = 'scale(' + (c.clientWidth / 375).toFixed(4) + ')'; root.querySelectorAll('.in-shop, .dm').forEach(function (n) { n.style.transform = k; }); };
+  fitCard(el);
   var $ = function (s) { return el.querySelector(s); }, all = function (s) { return el.querySelectorAll(s); };
   var bars = all('.in-bars i'), heads = all('.in-head span'), sub = $('.in-sub');
   var timers = [], ended = false;
@@ -648,10 +676,8 @@ function runIntro(force) {
     dl: '<path d="M12 3v12M7.5 10.5 12 15l4.5-4.5M5 19.5h14"/>'
   };
   var ppl = [['mina.k', '#D6BEA0'], ['jonas_cooks', '#B4C8BE'], ['lea', '#D2B4BE'], ['sam.eats', '#BEBED7'], ['hana', '#D6BEA0'], ['theo', '#B4C8BE'], ['yuna', '#D2B4BE'], ['max', '#BEBED7']];
-  var appRows = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', 'to serve']];
-  var appHTML = '<div class="pv-app"><div class="ap"><div class="ap-card"><img src="intro/pancake.jpg" alt=""><div class="ap-body"><span class="t">Fluffy pancakes</span><span class="m">20 min · 2 servings</span>' +
-    appRows.map(function (r, i) { return '<div class="row" style="animation-delay:' + (0.62 + i * 0.07).toFixed(2) + 's"><span class="dot"></span><span>' + r[0] + '</span><span class="de">' + r[1] + '</span><span class="q">' + r[2] + '</span></div>'; }).join('') +
-    '</div></div><div class="ap-head">save it.</div><p class="ap-sub">Ingredients come out clean, in English and German.</p></div></div>';
+  var appHTML = '<div class="pv-app"><div class="ap"><div class="ap-card">' + detailMini('', .55) +
+    '</div><div class="ap-head">save it.</div><p class="ap-sub">Ingredients come out clean, in English and German.</p></div></div>';
   var scrHTML = '<div class="pv-scr"><div class="pv-reel"><img class="pv-vid" src="intro/pancake.jpg" alt=""><div class="pv-shade"></div>' +
     '<span class="pv-time">9:41</span><span class="pv-title sh">Reels</span><span class="pv-cam-ic">' + SV(IC.camera, { s: 26, cls: 'sh' }) + '</span>' +
     '<div class="pv-rail"><span>' + SV(IC.heart, { cls: 'sh' }) + '2,418</span><span>' + SV(IC.comment, { cls: 'sh' }) + '86</span><span class="pv-share">' + SV(IC.send, { cls: 'sh' }) + '312<i class="pv-tap"></i></span>' + SV(IC.more, { fill: '#fff', cls: 'sh' }) + '<span class="aud"><img src="intro/pancake.jpg" alt=""></span></div>' +
@@ -670,7 +696,7 @@ function runIntro(force) {
   var VW = pov.clientWidth, VH = pov.clientHeight;
   // the screen inside the phone is laid out at this device's own size, so zooming in lands exactly on scene 2
   var HP = Math.round(VW * 812 / 375); // the phone keeps real iPhone proportions
-  scr.style.width = VW + 'px'; scr.style.height = HP + 'px';
+  scr.style.width = VW + 'px'; scr.style.height = HP + 'px'; fitCard(pov);
   var s0 = Math.min(0.64 * VH / HP, 0.7), SW = VW * s0, SH = HP * s0, x0 = (VW - SW) / 2, y0 = (VH - SH) / 2 - VH * 0.02, bz = 5 * s0 + 2;
   scr.style.transform = 'translate(' + x0.toFixed(2) + 'px,' + y0.toFixed(2) + 'px) scale(' + s0.toFixed(4) + ')';
   phone.style.cssText = 'left:' + (x0 - bz).toFixed(2) + 'px;top:' + (y0 - bz).toFixed(2) + 'px;width:' + (SW + bz * 2).toFixed(2) + 'px;height:' + (SH + bz * 2).toFixed(2) + 'px;border-radius:' + (40 * s0 + bz).toFixed(2) + 'px';
@@ -724,6 +750,8 @@ function runIntro(force) {
     heads[0].classList.add('on'); sub.textContent = 'Ingredients come out clean, in English and German.';
     requestAnimationFrame(function () { requestAnimationFrame(function () { pov.classList.add('gone'); pov.remove(); }); });
   });
+  // scroll the recipe like a thumb would, down to the ingredients
+  at(6700, function () { var m = el.querySelector('.in-recipe'); if (m) m.classList.add('scrolled'); });
   // scene 3 — the card turns into the shopping list
   at(8200, function () { el.classList.add('s3'); bar(1, 2400); head(1, 'One list for every recipe, sorted by the shop you go to.'); });
   var tick = function (i) { var r = all('.in-shop .check')[i]; if (r) { r.querySelector('input').checked = true; r.classList.add('done'); } };
