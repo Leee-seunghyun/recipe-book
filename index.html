@@ -450,7 +450,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro.s4 .in-bars i.full{background:rgba(242,238,231,.25)}
 #intro .in-skip{position:absolute;right:12px;top:calc(26px + env(safe-area-inset-top));height:40px;padding:0 10px;border:0;background:none;color:inherit;opacity:.6;font:inherit;font-size:14px}
 #intro .in-strip{position:absolute;left:0;right:0;top:220px;height:280px;overflow:visible;pointer-events:none}
-#intro .in-track{position:absolute;left:0;top:30px;display:flex;gap:12px;transform:rotate(-6deg);animation:inTrack 9s linear infinite}
+#intro .in-track{position:absolute;left:0;top:30px;display:flex;gap:12px;transform:rotate(-6deg);animation:inTrack 9s .5s linear infinite}
 #intro .in-track img{width:164px;height:205px;object-fit:cover;display:block;flex-shrink:0;animation:inPhotoIn .8s cubic-bezier(.3,1.4,.5,1) backwards}
 #intro .in-track img:nth-child(odd){margin-top:24px}
 #intro.s2 .in-track,#intro.s3 .in-track,#intro.s4 .in-track{animation-play-state:paused}
@@ -522,7 +522,7 @@ select.inp{appearance:none;-webkit-appearance:none}
 function runIntro(force) {
   var seen = false; try { seen = localStorage.getItem('loeffel_intro_v1') === '1'; } catch (e) {}
   if (seen && !force) return;
-  var IMG = ['pancake', 'salad', 'pasta', 'pie', 'gimbap', 'fries'];
+  var IMG = ['salad', 'pasta', 'pancake', 'pie', 'gimbap', 'fries'];
   var strip = IMG.concat(IMG).map(function (k, i) { return '<img src="intro/' + k + '.jpg" alt="" style="animation-delay:' + (i * 0.05) + 's">'; }).join('');
   var rows = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', 'to serve']];
   var shop = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', '1 bottle'], ['Blueberries', 'Heidelbeeren', '125 g']];
