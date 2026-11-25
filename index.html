@@ -449,15 +449,9 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro .in-bars i.full{opacity:1;background:rgba(58,42,33,.15)}
 #intro.s4 .in-bars i.full{background:rgba(242,238,231,.25)}
 #intro .in-skip{position:absolute;right:12px;top:calc(26px + env(safe-area-inset-top));height:40px;padding:0 10px;border:0;background:none;color:inherit;opacity:.6;font:inherit;font-size:14px}
-#intro .in-strip{position:absolute;left:0;right:0;top:220px;height:280px;overflow:visible;pointer-events:none}
-#intro .in-track{position:absolute;left:0;top:30px;display:flex;gap:12px;transform:rotate(-6deg);animation:inTrack 9s .5s linear infinite}
-#intro .in-track img{width:164px;height:205px;object-fit:cover;display:block;flex-shrink:0;animation:inPhotoIn .8s cubic-bezier(.3,1.4,.5,1) backwards}
-#intro .in-track img:nth-child(odd){margin-top:24px}
-#intro.s2 .in-track,#intro.s3 .in-track,#intro.s4 .in-track{animation-play-state:paused}
-#intro.s2 .in-track img{animation:inPhotoOut .55s cubic-bezier(.5,0,.75,0) forwards}
-@keyframes inTrack{from{transform:rotate(-6deg) translateX(0)}to{transform:rotate(-6deg) translateX(-1056px)}}
-@keyframes inPhotoIn{from{transform:translateY(60px) scale(.9);opacity:0}}
-@keyframes inPhotoOut{to{transform:translateY(40px) scale(.85);opacity:0}}
+#intro .in-strip{position:absolute;left:0;right:0;top:0;height:0;overflow:visible;pointer-events:none}
+#intro .in-track{position:absolute;left:0;top:0;transform-origin:0 0}
+#intro .in-track img{position:absolute;left:0;top:0;width:164px;height:205px;object-fit:cover;display:block;will-change:transform,opacity;opacity:0}
 #intro .in-card{position:absolute;left:24px;right:24px;top:calc(68px + env(safe-area-inset-top));height:min(470px,calc(100% - 290px));background:#fff;box-shadow:inset 0 0 0 1px #E2E2E2;opacity:0;overflow:hidden;transition:background-color .55s,box-shadow .55s}
 #intro.s2 .in-card,#intro.s3 .in-card,#intro.s4 .in-card{opacity:1}
 #intro.s2:not(.land) .in-card{background:transparent;box-shadow:none;overflow:visible}
@@ -523,7 +517,7 @@ function runIntro(force) {
   var seen = false; try { seen = localStorage.getItem('loeffel_intro_v1') === '1'; } catch (e) {}
   if (seen && !force) return;
   var IMG = ['salad', 'pasta', 'pancake', 'pie', 'gimbap', 'fries'];
-  var strip = IMG.concat(IMG).map(function (k, i) { return '<img src="intro/' + k + '.jpg" alt="" style="animation-delay:' + (i * 0.05) + 's">'; }).join('');
+  var strip = IMG.concat(IMG).map(function (k) { return '<img src="intro/' + k + '.jpg" alt="">'; }).join('');
   var rows = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', 'to serve']];
   var shop = [['Flour', 'Mehl', '200 g'], ['Milk', 'Milch', '300 ml'], ['Eggs', 'Eier', '2'], ['Butter', 'Butter', '30 g'], ['Maple syrup', 'Ahornsirup', '1 bottle'], ['Blueberries', 'Heidelbeeren', '125 g']];
   var d = function (i, base, step) { return ' style="animation-delay:' + (base + i * step).toFixed(2) + 's"'; };
@@ -559,17 +553,52 @@ function runIntro(force) {
     el.classList.add('out'); setTimeout(function () { el.remove(); }, 800);
   };
   $('.in-skip').addEventListener('click', finish);
-  // scene 1 — filmstrip
+  // scene 1 — filmstrip: one direction, rhythmic surges, staggered inertia
+  var track = $('.in-track'), tImgs = [].slice.call(all('.in-track img')), flowRaf = 0, flowOn = true;
+  (function placeStrip() {
+    var wr = el.querySelector('.in-wrap').getBoundingClientRect(), hd = $('.in-head').getBoundingClientRect();
+    var top = 78, bottom = hd.top - wr.top - 28, need = 205 + 24 + 44, sc = Math.min(1, (bottom - top) / need);
+    var y = top + Math.max(0, (bottom - top) - need * sc) / 2 + 30 * sc;
+    track.style.transform = 'translate(0,' + y.toFixed(1) + 'px) rotate(-6deg) scale(' + sc.toFixed(3) + ')';
+    track.dataset.sc = sc;
+  })();
+  var PITCH = 176, LAG = 0.055, N = tImgs.length, L = N * PITCH, TPIV = 2.6, PI2 = Math.PI * 2;
+  var VMIN = 34, VMAX = 230, T = 1.25, ENT = 470, TAU = 0.42;
+  // displacement of the lead card: a glide-in that settles, then soft surges and easings
+  var D = function (t) { if (t <= 0) return 0; return ENT * (1 - Math.exp(-t / TAU)) + VMIN * t + (VMAX - VMIN) * (t / 2 - T / (2 * PI2) * Math.sin(PI2 * t / T)); };
+  var V = function (t) { if (t <= 0) return 0; return ENT / TAU * Math.exp(-t / TAU) + VMIN + (VMAX - VMIN) * (0.5 - 0.5 * Math.cos(PI2 * t / T)); };
+  var stageW = el.querySelector('.in-wrap').clientWidth / (+track.dataset.sc || 1);
+  var VAVG = (VMIN + VMAX) / 2, BASE = PITCH - VAVG * LAG;
+  // start offset chosen so the pancake (index 2) is centred when it lifts off
+  var PI = IMG.indexOf('pancake');
+  var X0 = stageW / 2 - 82 - (PI * BASE - D(TPIV - PI * LAG));
+  var tStart = performance.now();
+  var flow = function (now) {
+    if (!flowOn) return;
+    var t = (now - tStart) / 1000;
+    for (var i = 0; i < N; i++) {
+      var ti = t - i * LAG, x = X0 + i * BASE - D(ti);
+      x = ((x + 260) % L + L) % L - 260;
+      var v = V(ti), lean = -Math.min(1.6, v / 420);
+      var o = ti <= 0 ? 0 : Math.min(1, ti / 0.25);
+      tImgs[i].style.transform = 'translate(' + x.toFixed(2) + 'px,' + (i % 2 ? 24 : 0) + 'px) rotate(' + lean.toFixed(2) + 'deg)';
+      tImgs[i].style.opacity = o.toFixed(3);
+    }
+    flowRaf = requestAnimationFrame(flow);
+  };
+  flowRaf = requestAnimationFrame(flow);
   requestAnimationFrame(function () { bar(0, 4900); head(0, 'Recipes from any reel or short, kept in one place.'); });
   // scene 2 — the pancake photo becomes the recipe card
   at(2600, function () {
+    flowOn = false; cancelAnimationFrame(flowRaf);
     var ph = $('.in-photo'), imgs = all('.in-track img'), best = null, cx = innerWidth / 2, bd = 1e9;
     imgs.forEach(function (im, i) { if (IMG[i % 6] !== 'pancake') return; var r = im.getBoundingClientRect(); if (r.right < 20 || r.left > innerWidth - 20) return; var dd = Math.abs(r.left + r.width / 2 - cx); if (dd < bd) { bd = dd; best = im; } });
     if (!best) best = imgs[0];
     var a = best.getBoundingClientRect(); el.classList.add('s2'); var b = ph.getBoundingClientRect();
     best.style.visibility = 'hidden';
+    imgs.forEach(function (im) { if (im === best || !im.animate) return; var cur = im.style.transform; im.animate([{ transform: cur, opacity: +im.style.opacity || 1 }, { transform: cur + ' translateY(46px) scale(.96)', opacity: 0 }], { duration: 420, easing: 'cubic-bezier(.4,0,.8,.4)', fill: 'forwards' }); });
     var from = 'translate(' + (a.left - b.left) + 'px,' + (a.top - b.top) + 'px) scale(' + (a.width / b.width) + ',' + (a.height / b.height) + ') rotate(-6deg)';
-    if (ph.animate) ph.animate([{ transform: from, transformOrigin: '0 0' }, { offset: .74, transform: 'translate(0,-8px) scale(1.012,.99)', transformOrigin: '0 0' }, { offset: .88, transform: 'translate(0,2px) scale(.998,1.004)', transformOrigin: '0 0' }, { transform: 'none', transformOrigin: '0 0' }], { duration: 860, easing: 'cubic-bezier(.55,0,.2,1)' });
+    if (ph.animate) ph.animate([{ transform: from, transformOrigin: '0 0' }, { offset: .8, transform: 'translate(0,-3px) scale(1.004,.998)', transformOrigin: '0 0' }, { transform: 'none', transformOrigin: '0 0' }], { duration: 860, easing: 'cubic-bezier(.55,0,.2,1)' });
     at(760, function () { el.classList.add('land'); });
     at(700, function () { head(0, 'Ingredients come out clean, in English and German.'); });
   });
