@@ -450,7 +450,8 @@ select.inp{appearance:none;-webkit-appearance:none}
 #intro.s4 .in-bars i.full{background:rgba(242,238,231,.25)}
 #intro .in-skip{position:absolute;right:12px;top:calc(26px + env(safe-area-inset-top));height:40px;padding:0 10px;border:0;background:none;color:inherit;opacity:.6;font:inherit;font-size:14px}
 #intro .in-pov{position:absolute;inset:0;overflow:hidden;background:#F2EEE7;z-index:3;transition:opacity .35s ease}
-#intro .in-pov.gone{opacity:0;pointer-events:none}
+#intro .in-pov.gone{opacity:0;pointer-events:none;transition:none}
+#intro.instant .in-head,#intro.instant .in-sub,#intro.instant .in-bars i,#intro.instant .in-skip{transition:none!important}
 #intro .pv-cam{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
 #intro .pv-phone{position:absolute;background:#141414;box-shadow:inset 0 0 0 1.5px #3a3a3a,0 30px 60px -20px rgba(58,42,33,.45),0 8px 18px -8px rgba(58,42,33,.3)}
 #intro .pv-island{position:absolute;background:#000;border-radius:999px;transition:opacity .3s}
@@ -645,7 +646,7 @@ function runIntro(force) {
   var appHTML = '<div class="pv-app"><div class="ap"><div class="ap-card"><img src="intro/pancake.jpg" alt=""><div class="ap-body"><span class="t">Fluffy pancakes</span><span class="m">20 min · 2 servings</span>' +
     appRows.map(function (r, i) { return '<div class="row" style="animation-delay:' + (0.62 + i * 0.07).toFixed(2) + 's"><span class="dot"></span><span>' + r[0] + '</span><span class="de">' + r[1] + '</span><span class="q">' + r[2] + '</span></div>'; }).join('') +
     '</div></div><div class="ap-head">save it.</div><p class="ap-sub">Ingredients come out clean, in English and German.</p></div></div>';
-  var scrHTML = '<div class="pv-scr"><div class="pv-reel"><img class="pv-vid" src="intro/pancake.jpg" alt=""><div class="pv-shade"></div><div class="pv-prog"><i></i></div>' +
+  var scrHTML = '<div class="pv-scr"><div class="pv-reel"><img class="pv-vid" src="intro/pancake.jpg" alt=""><div class="pv-shade"></div>' +
     '<span class="pv-time">9:41</span><span class="pv-title sh">Reels</span><span class="pv-cam-ic">' + SV(IC.camera, { s: 26, cls: 'sh' }) + '</span>' +
     '<div class="pv-rail"><span>' + SV(IC.heart, { cls: 'sh' }) + '2,418</span><span>' + SV(IC.comment, { cls: 'sh' }) + '86</span><span class="pv-share">' + SV(IC.send, { cls: 'sh' }) + '312<i class="pv-tap"></i></span>' + SV(IC.more, { fill: '#fff', cls: 'sh' }) + '<span class="aud"><img src="intro/pancake.jpg" alt=""></span></div>' +
     '<div class="pv-info"><div class="pv-user"><i></i>sunday.kitchen<b>Follow</b></div><p class="pv-cap">Fluffy pancakes for slow Sundays 200 g flour, 300 ml milk, 2 eggs… <em>more</em></p><div class="pv-aud">' + SV(IC.note, { s: 15, w: 2 }) + 'sunday.kitchen · Original audio</div></div>' +
@@ -661,7 +662,7 @@ function runIntro(force) {
   var cam = pov.querySelector('.pv-cam'), scr = pov.querySelector('.pv-scr'), phone = pov.querySelector('.pv-phone'), island = pov.querySelector('.pv-island');
   // a plain iPhone frame, square to the screen, on a flat Field background
   var VW = pov.clientWidth, VH = pov.clientHeight;
-  var s0 = Math.min((VH * 0.66) / 812, (VW * 0.62) / 400), SW = 400 * s0, SH = 812 * s0, x0 = (VW - SW) / 2, y0 = (VH - SH) / 2 - VH * 0.02, bz = 11 * s0 + 3;
+  var s0 = Math.min((VH * 0.66) / 812, (VW * 0.62) / 400), SW = 400 * s0, SH = 812 * s0, x0 = (VW - SW) / 2, y0 = (VH - SH) / 2 - VH * 0.02, bz = 5 * s0 + 2;
   scr.style.transform = 'translate(' + x0.toFixed(2) + 'px,' + y0.toFixed(2) + 'px) scale(' + s0.toFixed(4) + ')';
   phone.style.cssText = 'left:' + (x0 - bz).toFixed(2) + 'px;top:' + (y0 - bz).toFixed(2) + 'px;width:' + (SW + bz * 2).toFixed(2) + 'px;height:' + (SH + bz * 2).toFixed(2) + 'px;border-radius:' + (40 * s0 + bz).toFixed(2) + 'px';
   island.style.cssText = 'left:' + (x0 + SW / 2 - 58 * s0).toFixed(2) + 'px;top:' + (y0 + 12 * s0).toFixed(2) + 'px;width:' + (116 * s0).toFixed(2) + 'px;height:' + (34 * s0).toFixed(2) + 'px';
@@ -700,14 +701,16 @@ function runIntro(force) {
   // open löffel on the same phone: the recipe builds itself on the screen in the hand
   at(3700, function () { scr.classList.add('pv-switch'); });
   // then the camera goes into the screen until the screen is the view
-  at(4900, function () { island.style.opacity = '0'; if (cam.animate) cam.animate([{ transform: camT(K1, -tilt, VW / 2, TY) }, { transform: camT(K3, -tilt, VW / 2, VH / 2) }], { duration: 950, easing: 'cubic-bezier(.55,0,.2,1)', fill: 'forwards' }); });
+  at(4900, function () { var zo = { duration: 950, easing: 'cubic-bezier(.55,0,.2,1)', fill: 'forwards' };
+    if (phone.animate) { phone.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, easing: 'ease-out', fill: 'forwards' }); island.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, fill: 'forwards' }); scr.animate([{ borderRadius: '40px' }, { borderRadius: '0px' }], zo); } else { phone.style.opacity = island.style.opacity = '0'; }
+    if (cam.animate) cam.animate([{ transform: camT(K1, -tilt, VW / 2, TY) }, { transform: camT(K3, -tilt, VW / 2, VH / 2) }], { duration: 950, easing: 'cubic-bezier(.55,0,.2,1)', fill: 'forwards' }); });
   requestAnimationFrame(function () { bar(0, 8200); });
   // scene 2 — the pancake photo becomes the recipe card
   at(5900, function () {
     // the phone screen and the real scene 2 line up exactly here, so swap without a visible change
     el.classList.add('instant', 's2', 'land'); el.classList.remove('pov');
     heads[0].classList.add('on'); sub.textContent = 'Ingredients come out clean, in English and German.';
-    requestAnimationFrame(function () { pov.classList.add('gone'); setTimeout(function () { pov.remove(); }, 400); });
+    requestAnimationFrame(function () { requestAnimationFrame(function () { pov.classList.add('gone'); pov.remove(); }); });
   });
   // scene 3 — the card turns into the shopping list
   at(8200, function () { el.classList.add('s3'); bar(1, 2400); head(1, 'One list for every recipe, sorted by the shop you go to.'); });
