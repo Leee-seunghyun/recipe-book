@@ -578,7 +578,7 @@ function runIntro(force) {
     var t = (now - tStart) / 1000;
     for (var i = 0; i < N; i++) {
       var ti = t - i * LAG, x = X0 + i * BASE - D(ti);
-      x = ((x + 260) % L + L) % L - 260;
+      while (x < -260) x += L;
       var v = V(ti), lean = -Math.min(1.6, v / 420);
       var o = ti <= 0 ? 0 : Math.min(1, ti / 0.25);
       tImgs[i].style.transform = 'translate(' + x.toFixed(2) + 'px,' + (i % 2 ? 24 : 0) + 'px) rotate(' + lean.toFixed(2) + 'deg)';
